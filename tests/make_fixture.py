@@ -49,6 +49,14 @@ EXPERIMENTS = {
         "control": "",
     },
     "chipC": {"reps": {"rep1": 1}, "layout": "se", "barcodes": "none", "control": ""},
+    # Too few sites for IDR, which needs 20 merged peaks.
+    "chipWeak": {
+        "reps": {"rep1": 1, "rep2": 1},
+        "layout": "se",
+        "barcodes": "",
+        "control": "",
+        "sites": 8,
+    },
 }
 
 
@@ -86,15 +94,17 @@ def main(argv=None):
     _write_genome(genome, out)
     sites = _sites(rng, args.sites)
 
+    controls = {e["control"] for e in EXPERIMENTS.values()}
     rows, expected = [], {}
     for exp, e in EXPERIMENTS.items():
         for rep, n_runs in e["reps"].items():
-            reads = _library(rng, genome, sites if exp.startswith("chip") else [], e)
+            reads = _library(
+                rng, genome, [] if exp in controls else sites[: e.get("sites")], e
+            )
             _mark_trimmed_short(reads, e)
             paths = _write_runs(reads, out, f"{exp}_{rep}", n_runs, e["layout"])
             for r1, r2 in paths:
                 rows.append([exp, rep, r1, r2, "fixture", e["barcodes"], e["control"]])
-            controls = {x["control"] for x in EXPERIMENTS.values()}
             mode = (
                 "umi"
                 if e["barcodes"] != "none"
