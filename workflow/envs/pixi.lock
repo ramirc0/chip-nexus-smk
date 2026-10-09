@@ -148,6 +148,7 @@ environments:
     - url: https://conda.anaconda.org/bioconda/
     packages:
       linux-64:
+      - conda: https://conda.anaconda.org/bioconda/linux-64/bedtools-2.31.1-h13024bc_3.tar.bz2
       - conda: https://conda.anaconda.org/bioconda/linux-64/idr-2.0.4.2-py39h031d066_12.tar.bz2
       - conda: https://conda.anaconda.org/conda-forge/linux-64/_openmp_mutex-4.5-20_gnu.conda
       - conda: https://conda.anaconda.org/conda-forge/linux-64/brotli-1.2.0-h505cf86_4.conda

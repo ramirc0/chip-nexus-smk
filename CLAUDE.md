@@ -24,6 +24,7 @@ pixi run snakemake --profile profiles/slurm
 ## Gotchas
 
 - `.smk` files are not linted. Keep helper docstrings numpydoc by hand.
+- Every tool a rule calls MUST be in that rule's env. Jobs keep the user's PATH, so a missing tool resolves to a user binary that may need CPU features some nodes lack.
 - Cutadapt pass 1 cuts the UMI with `-u`, then matches the fixed barcode anchored at the new start. Pass 2 has no `--rename`, so the pass-1 read ID survives.
 - UMI contract: every barcoded read ID ends in `_<KEY>`, the canonical fixed barcode plus the UMI as read. Dedup tools read the UMI from there.
 - `dedup.smk` is swappable. A replacement MUST keep the dedup contract below.

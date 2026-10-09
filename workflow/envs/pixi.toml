@@ -24,6 +24,7 @@ bam2bw = "==0.4.1"
 [feature.idr.dependencies]
 python = "3.9.*"
 idr = "2.0.4.2.*"
+bedtools = "2.31.1.*"
 
 # idr --plot only saves a PNG. Without this, a job that inherits DISPLAY picks a GUI backend.
 [feature.idr.activation.env]
