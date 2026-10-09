@@ -5,12 +5,12 @@ guards for empty peak sets.
 """
 
 import argparse
-import gzip
 import math
 import shutil
 from pathlib import Path
 
 import polars as pl
+from zlib_ng import gzip_ng
 
 SUFFIX = ".idr.narrowPeak.gz"
 
@@ -106,7 +106,7 @@ def _count(path):
     int
         Number of lines.
     """
-    with gzip.open(path, "rt") as f:
+    with gzip_ng.open(path, "rt") as f:
         return sum(1 for _ in f)
 
 

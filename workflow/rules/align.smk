@@ -114,6 +114,6 @@ rule tagalign:
             NR == FNR {{ keep[$1]; next }}
             $1 in keep {{ print $1, $2, $3, "N", 1000, $6 }}' \
             {input.sizes:q} - \
-        | gzip -nc \
+        | python -m zlib_ng.gzip_ng -cn \
         > {output:q}
         """

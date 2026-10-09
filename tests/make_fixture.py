@@ -14,13 +14,14 @@ reads adapter trimming leaves too short.
 """
 
 import argparse
-import gzip
 import json
 import random
 import subprocess
 import tempfile
 from collections import Counter
 from pathlib import Path
+
+from zlib_ng import gzip_ng
 
 ADAPTER_R1 = "AGATCGGAAGAGCACACGTCTGAACTCCAGTCACTTAGGCATCTCGTATGCCGTCTTCTGCTTG"
 ADAPTER_R2 = "AGATCGGAAGAGCGTCGTGTAGGGAAAGAGTGTAGATCTCGGTGGTCGCCGTATCATT"
@@ -383,7 +384,7 @@ def _write_runs(reads, out, name, n_runs, layout):
         mates = ("1", "2") if layout == "pe" else ("1",)
         files = {m: out / f"{name}_run{run}_{m}.fastq.gz" for m in mates}
         for m, path in files.items():
-            with gzip.open(path, "wt") as h:
+            with gzip_ng.open(path, "wt") as h:
                 for i, read in enumerate(reads[run::n_runs]):
                     seq = read["r1"] if m == "1" else read["r2"]
                     h.write(f"@{name}.{run}.{i} {m}:N:0\n{seq}\n+\n{'I' * len(seq)}\n")

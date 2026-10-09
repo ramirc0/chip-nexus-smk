@@ -20,7 +20,7 @@ rule frip:
         exec &> >(tee {log:q})
 
         ends() {{
-            zcat {input.tagalign:q} \
+            python -m zlib_ng.gzip_ng -cd {input.tagalign:q} \
             | awk 'BEGIN {{ OFS = "\t" }}
                 {{ e = ($6 == "+") ? $2 : $3 - 1; print $1, e, e + 1 }}'
         }}

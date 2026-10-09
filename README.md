@@ -34,8 +34,8 @@ replicate are concatenated.
 |---|---|---|
 | `experiment` | yes | Experiment name. |
 | `replicate` | yes | Replicate name. `pooled`, `peaks`, `idr`, and `pr` are reserved. |
-| `fastq_1` | yes | Read 1 FASTQ, gzipped or not. |
-| `fastq_2` | no | Read 2 FASTQ. Makes the library paired-end. |
+| `fastq_1` | yes | Read 1 FASTQ, gzipped. |
+| `fastq_2` | no | Read 2 FASTQ, gzipped. Makes the library paired-end. |
 | `genome` | yes | Key in `config["genomes"]`. |
 | `barcodes` | no | 5' read pattern, N = UMI base, e.g. `NNNNNCTGA`. Comma-separate a barcode set. Empty uses `config["barcodes"]`. `none` means no barcode. |
 | `control` | no | Experiment to use as the MACS3 control. |

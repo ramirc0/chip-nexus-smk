@@ -104,6 +104,9 @@ for row in _sheet.iter_rows(named=True):
         _fail(f"{exp}: genome {row['genome']!r} is not in config['genomes']")
     if not row["fastq_1"]:
         _fail(f"{exp} {rep}: empty fastq_1")
+    for fastq in (row["fastq_1"], row["fastq_2"]):
+        if fastq and not fastq.endswith(".gz"):
+            _fail(f"{exp} {rep}: {fastq} must be gzipped (.gz)")
     e = EXPERIMENTS.setdefault(
         exp, {"genome": row["genome"], "control": row["control"] or None, "reps": []}
     )

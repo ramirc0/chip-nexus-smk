@@ -27,13 +27,13 @@ rule pseudoreps:
         workdir=$(mktemp -d)
         trap 'rm -rf "$workdir"' EXIT
 
-        zcat {input:q} \
+        python -m zlib_ng.gzip_ng -cd {input:q} \
         | gawk -v pr1="$workdir/pr1" -v pr2="$workdir/pr2" '
             BEGIN {{ srand(0) }}
             {{ print > (rand() < 0.5 ? pr1 : pr2) }}'
         touch "$workdir/pr1" "$workdir/pr2"
-        gzip -nc "$workdir/pr1" > {output.pr1:q}
-        gzip -nc "$workdir/pr2" > {output.pr2:q}
+        python -m zlib_ng.gzip_ng -cn "$workdir/pr1" > {output.pr1:q}
+        python -m zlib_ng.gzip_ng -cn "$workdir/pr2" > {output.pr2:q}
         """
 
 
@@ -107,11 +107,11 @@ rule macs3:
         LC_ALL=C sort -k8,8gr "$workdir/peaks_peaks.narrowPeak" \
         | awk -v cap={params.cap:q} 'BEGIN {{ OFS = "\t" }}
             NR <= cap {{ $4 = "Peak_" NR; print }}' \
-        | gzip -nc \
+        | python -m zlib_ng.gzip_ng -cn \
         > {output.peaks:q}
 
         bedtools intersect -v -a {output.peaks:q} -b {input.blacklist:q} \
-        | gzip -nc \
+        | python -m zlib_ng.gzip_ng -cn \
         > {output.bfilt:q}
         """
 
@@ -167,7 +167,7 @@ rule idr:
             echo ok > {output.status:q}
         fi
 
-        gzip -nc "$workdir/idr" > {output.raw:q}
+        python -m zlib_ng.gzip_ng -cn "$workdir/idr" > {output.raw:q}
         mv "$workdir/idr.png" {output.plot:q}
 
         # Column 12 is the global -log10(IDR).
@@ -179,7 +179,7 @@ rule idr:
         | LC_ALL=C sort -u \
         | LC_ALL=C sort -k8,8gr \
         | bedtools intersect -v -a stdin -b {input.blacklist:q} \
-        | gzip -nc \
+        | python -m zlib_ng.gzip_ng -cn \
         > {output.peaks:q}
         """
 

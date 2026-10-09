@@ -35,6 +35,7 @@ pixi run snakemake --profile profiles/slurm
 - MACS3 caps peaks inside awk. `head` exits early and fails the pipe under pipefail.
 - Pseudoreps call `gawk`. mawk gives a different `srand(0)` stream.
 - SLURM nodes z1056, z1058, z1062, and z1016 lack `/data`, where the sra-chip FASTQs live. The slurm profile excludes them.
+- Rules compress and decompress with `python -m zlib_ng.gzip_ng`, never `gzip` or `zcat`. Scripts use `zlib_ng.gzip_ng`. Tools that read `.gz` themselves (bowtie2, MACS3, bedtools, idr, polars) are left alone. It has no `zcat -f`, so FASTQs MUST be gzipped.
 - Resources MUST be flat values. Never derive `mem_mb` or `runtime` from input size.
 - Auto mode may block `pixi lock`, `pixi install`, or workflow runs. Ask the user to run them.
 

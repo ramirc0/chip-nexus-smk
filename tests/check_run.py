@@ -14,7 +14,6 @@ also match exactly. Exits non-zero if any check fails.
 """
 
 import argparse
-import gzip
 import json
 import sys
 from pathlib import Path
@@ -22,6 +21,7 @@ from pathlib import Path
 import polars as pl
 import pyBigWig
 import pysam
+from zlib_ng import gzip_ng
 
 ADAPTER = "AGATCGGAAGAGC"
 ADAPTER_RC = "GCTCTTCCGATCT"
@@ -171,7 +171,7 @@ def _check_tracks(check, name, prefix, r1):
         Deliverable R1 reads on kept chromosomes.
     """
     track = _bw_sum(f"{prefix}.+.bw") + _bw_sum(f"{prefix}.-.bw")
-    with gzip.open(f"{prefix}.tagAlign.gz", "rt") as f:
+    with gzip_ng.open(f"{prefix}.tagAlign.gz", "rt") as f:
         lines = sum(1 for _ in f)
     check(f"{name} track sum == tagAlign lines", track, lines)
     check(f"{name} tagAlign lines == R1 on kept", lines, r1)

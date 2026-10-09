@@ -7,12 +7,12 @@ method that writes it is supported.
 """
 
 import argparse
-import gzip
 import json
 import re
 from pathlib import Path
 
 import polars as pl
+from zlib_ng import gzip_ng
 
 
 def build_parser():
@@ -269,7 +269,7 @@ def _count(path):
     int
         Number of lines.
     """
-    with gzip.open(path, "rt") as f:
+    with gzip_ng.open(path, "rt") as f:
         return sum(1 for _ in f)
 
 
