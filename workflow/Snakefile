@@ -1,11 +1,27 @@
 
 include: "rules/common.smk"
+include: "rules/refs.smk"
 include: "rules/preprocess.smk"
-include: "rules/analyze.smk"
-include: "rules/report.smk"
+include: "rules/align.smk"
+include: "rules/dedup.smk"
+include: "rules/signal.smk"
+include: "rules/peaks.smk"
+include: "rules/qc.smk"
 
 
 rule all:
     input:
-        f"{OUTDIR}/report/summary.svg",
-        [f"{prefix(s)}.curve.svg" for s in SAMPLES],
+        f"{OUTDIR}/qc.tsv",
+        [f"{lib_prefix(e, r)}.bam" for e, r in LIBRARIES],
+        [
+            f"{lib_prefix(e, s)}.{strand}.bw"
+            for e in EXPERIMENTS
+            for s in samples_of(e)
+            for strand in "+-"
+        ],
+        [
+            f"{OUTDIR}/{e}/{e}.{kind}"
+            for e in CHIPS
+            for kind in ("conservative.narrowPeak.gz", "optimal.narrowPeak.gz")
+        ],
+        [f"{OUTDIR}/{e}/idr/{e}.{p}.idr.{x}" for e in CHIPS for p in idr_pairs(e) for x in ("txt.gz", "png")],
