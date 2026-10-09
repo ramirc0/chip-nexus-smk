@@ -13,31 +13,42 @@ slurm-efficiency-report-path: logs/efficiency
 slurm-efficiency-threshold: 0.8
 
 default-resources:
-  slurm_account: youraccount
+  slurm_account: ramirezc
   slurm_partition: 12hours
   runtime: 60m
   mem_mb: 4000
-  # slurm_extra: "--exclude=node1,node2"   # e.g. nodes missing a shared mount
+  # These nodes lack the /data mount that the sra-chip FASTQs live on.
+  slurm_extra: "--exclude=z1056,z1058,z1062,z1016"
 
 set-threads:
-  prepare: 1
-  analyze: 4
+  bowtie2_index: 16
+  trim: 4
+  align: 8
+  dedup: 4
+  tracks: 2
 
 set-resources:              # tune from benchmarks/ TSVs after a real run
-  prepare:
-    mem_mb: 2000 * attempt
-    runtime: 30m
-  analyze:
+  bowtie2_index:
+    mem_mb: 32000 * attempt
+    runtime: 600m
+  trim:
+    mem_mb: 4000 * attempt
+    runtime: 240m
+  align:
+    mem_mb: 16000 * attempt
+    runtime: 600m
+  dedup:
+    mem_mb: 4000 * attempt
+    runtime: 120m
+  tracks:
+    mem_mb: 32000 * attempt
+    runtime: 120m
+  macs3:
     mem_mb: 8000 * attempt
     runtime: 120m
-
-  # GPU rule pattern (uncomment + adapt for a CUDA rule):
-  #  fit:
-  #    slurm_partition: gpu
-  #    gres: gpu:1
-  #    tasks_per_gpu: 0     # suppress --ntasks-per-gpu (conflicts with cpus-per-task for pytorch)
-  #    mem_mb: 48000 * attempt
-  #    runtime: 1440m
+  idr:
+    mem_mb: 4000 * attempt
+    runtime: 60m
 
 rerun-incomplete: true
 keep-going: true

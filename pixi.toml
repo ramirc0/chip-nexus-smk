@@ -1,7 +1,7 @@
 # Launcher: Snakemake with the pixi software-deployment and SLURM executor
 # plugins. Rule envs live in their own workspace, workflow/envs/pixi.toml.
 [workspace]
-name = "snakemake-template"
+name = "chip-nexus-smk"
 channels = ["conda-forge"]
 platforms = ["linux-64"]
 

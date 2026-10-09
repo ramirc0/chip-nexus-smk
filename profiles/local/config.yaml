@@ -18,8 +18,17 @@ default-resources:          # fallback for trivial rules
   runtime: 30
 
 set-threads:
-  analyze: 4
+  bowtie2_index: 16
+  trim: 4
+  align: 8
+  dedup: 4
+  tracks: 2
 
 set-resources:              # tune from benchmarks/ TSVs after a real run
-  prepare: {mem_mb: 2000}
-  analyze: {mem_mb: 8000}
+  bowtie2_index: {mem_mb: 32000}
+  trim: {mem_mb: 4000}
+  align: {mem_mb: 16000}
+  dedup: {mem_mb: 4000}
+  tracks: {mem_mb: 32000}
+  macs3: {mem_mb: 8000}
+  idr: {mem_mb: 4000}
