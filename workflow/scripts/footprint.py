@@ -1,7 +1,9 @@
 """Average the + and - strand 5' counts around peak summits.
 
 In ChIP-nexus, + strand 5' ends stop left of the bound protein and - strand
-5' ends stop right of it. The averaged profile shows that footprint.
+5' ends stop right of it. The averaged profile shows that footprint. It uses
+the strongest summits only. A weak peak from one or two reads has its summit
+on a read's 5' end, and many such peaks add a spike at offset 0.
 """
 
 import argparse
@@ -30,6 +32,9 @@ def build_parser():
         "--minus", nargs="+", required=True, help="- strand bigWig per sample."
     )
     p.add_argument("--width", type=int, default=100, help="Half window in bp.")
+    p.add_argument(
+        "--top", type=int, default=1000, help="Summits to use, strongest first."
+    )
     p.add_argument("-o", "--output", required=True, help="TSV to write.")
     return p
 
@@ -43,10 +48,10 @@ def main(argv=None):
         Command-line arguments. Defaults to `sys.argv[1:]`.
     """
     args = build_parser().parse_args(argv)
+    # The peak file is sorted by p-value, strongest first.
     with gzip_ng.open(args.peaks, "rt") as f:
-        summits = [
-            (r[0], int(r[1]) + int(r[9])) for r in (line.split("\t") for line in f)
-        ]
+        rows = [line.split("\t") for line, _ in zip(f, range(args.top))]
+    summits = [(r[0], int(r[1]) + int(r[9])) for r in rows]
 
     offsets = np.arange(-args.width, args.width + 1)
     tables = []

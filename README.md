@@ -76,7 +76,7 @@ Under `results/<run_id>/<experiment>/`:
 | `idr/<exp>.<pair>.idr.narrowPeak.gz` | IDR peaks at 0.05, after the blacklist. |
 | `<exp>.{conservative,optimal}.narrowPeak.gz` | ENCODE reproducible peak sets. |
 | `<exp>.reproducibility.tsv` | Peak counts, rescue and self-consistency ratios. |
-| `<exp>.footprint.{tsv,svg}` | Mean + and - strand 5' ends within 100 bp of the optimal summits. + ends should peak left of the summit and - ends right of it. |
+| `<exp>.footprint.{tsv,svg}` | Mean + and - strand 5' ends within 100 bp of the top 1,000 optimal summits. + ends should peak left of the summit and - ends right of it. |
 | `<exp>.fingerprint.svg` | Cumulative reads over 500 bp bins sorted by count, ChIP and control. Data in `<rep>/<exp>.<rep>.fingerprint.tsv`. |
 | `<exp>.duplicates.svg` | Fraction of reads per duplicate group size, per replicate. |
 | `<exp>.insert_size.svg` | Insert sizes of paired-end replicates. |

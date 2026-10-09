@@ -67,7 +67,7 @@ rule fingerprint:
         """
 
 
-# Strand profile of each replicate and the pool around the optimal summits.
+# Strand profile of each replicate and the pool around the top optimal summits.
 rule footprint:
     input:
         peaks=f"{OUTDIR}/{{exp}}/{{exp}}.optimal.narrowPeak.gz",
@@ -96,6 +96,7 @@ rule footprint:
             --plus {input.plus:q} \
             --minus {input.minus:q} \
             --width 100 \
+            --top 1000 \
             --output {output:q}
         """
 
