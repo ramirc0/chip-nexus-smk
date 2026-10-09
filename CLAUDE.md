@@ -1,39 +1,58 @@
 # CLAUDE.md
 
-Skeleton Snakemake workflow. Rules are stubs that demonstrate the directive set.
-README.md holds the layout, idioms, and style conventions. Follow it.
+ENCODE-style ChIP-nexus workflow. README.md holds the steps, sample sheet,
+outputs, the behavior choices with their reasons, and the style conventions.
+Follow it.
 
 ## Commands
 
 ```bash
 pixi run lint                                # ruff check, ruff format --check, numpydoc lint
 pixi run snakemake -n -p --profile profiles/local
-pixi run snakemake --profile profiles/local --cores 2
+pixi run snakemake --profile profiles/slurm
 ```
 
 ## Two pixi workspaces
 
 - Root `pixi.toml` is the launcher: Snakemake and its plugins, plus the `lint` env.
-- `workflow/envs/pixi.toml` is the rule env. Rule dependencies go there, never in the root.
+- `workflow/envs/pixi.toml` holds the rule envs: `default` for the tools and `idr` (python 3.9, numpy < 1.20).
 - `pyproject.toml` is ruff and numpydoc config only. pixi ignores it.
 - Rules use `locked=True`. After a manifest edit, run `pixi lock` in `workflow/envs/`.
 - Any manifest or lock change reruns every rule.
-- `SOFTWARE_ENV` resolves `../envs` relative to the rule file. New rule files MUST sit in `workflow/rules/`.
+- `SOFTWARE_ENV` and `IDR_ENV` resolve `../envs` relative to the rule file. New rule files MUST sit in `workflow/rules/`.
 
 ## Gotchas
 
 - `.smk` files are not linted. Keep helper docstrings numpydoc by hand.
-- Plots use poikilos `plain`. `pk.save_figure()` writes SVG and PNG. Rules MUST declare both outputs.
-- `MPLBACKEND=Agg` is set in the rule env activation. Scripts rely on it.
+- Cutadapt pass 1 cuts the UMI with `-u`, then matches the fixed barcode anchored at the new start. Pass 2 has no `--rename`, so the pass-1 read ID survives.
+- UMI contract: every barcoded read ID ends in `_<KEY>`, the canonical fixed barcode plus the UMI as read. Dedup tools read the UMI from there.
+- `dedup.smk` is swappable. A replacement MUST keep the dedup contract below.
+- The deliverable BAM is R1 only. bam2bw counts every mapped read with no dup, MAPQ, or mate filter, so it MUST only see deliverable BAMs.
+- `chrom_sizes` is the allow-list for tagAligns, tracks, peaks, FRiP, and the dedup histogram. BAMs keep all chromosomes.
+- The `rep` wildcard excludes `pooled` with a lookahead. `$` would anchor the whole path, not the wildcard.
+- IDR below 20 merged peaks writes empty outputs and status `too_few_peaks`. Other IDR errors fail the job.
+- MACS3 caps peaks inside awk. `head` exits early and fails the pipe under pipefail.
+- Pseudoreps call `gawk`. mawk gives a different `srand(0)` stream.
+- SLURM nodes z1056, z1058, z1062, and z1016 lack `/data`, where the sra-chip FASTQs live. The slurm profile excludes them.
 - Resources MUST be flat values. Never derive `mem_mb` or `runtime` from input size.
-- The `* attempt` retry scaling in `profiles/slurm/config.yaml` is intentional.
-- Auto mode may block `pixi lock`, `pixi install`, or workflow runs that fetch the poikilos git dependency. Ask the user to run them.
+- Auto mode may block `pixi lock`, `pixi install`, or workflow runs. Ask the user to run them.
+
+## Dedup contract
+
+Inputs:
+- `<lib>.filt.bam`, coordinate-sorted and filtered. PE mates carry `fixmate -m` tags.
+- The genome's allow-list chrom sizes.
+- `dedup_mode()` (`umi`, `position`, or `none`) and the library layout (`se` or `pe`).
+
+Outputs:
+- `<lib>.bam` and `.bai`: duplicates removed (kept for `none`), R1 only, all chromosomes.
+- `<lib>.dedup.tsv`: `group_size`, `n_groups` over kept R1 reads on allow-list chromosomes. `qc_table.py` derives NRF, PBC1, and PBC2 from it alone.
+- Raw tool stats for the user. No rule or script parses them.
 
 ## Verifying a change
 
-No test suite. Run the workflow end to end on throwaway inputs:
+1. `pixi run lint`.
+2. Synthetic fixture, exact expected counts (commands in README.md "Testing"). `tests/check_run.py` MUST report 0 failed.
+3. Real subsamples: `config/samples.example.tsv` points at `resources/reads/`, the first 2M reads of each run. Run with the slurm profile and run `tests/check_run.py` on the result.
 
-1. Copy `config/config.yaml.template` to `config/config.yaml` and `config/samples.example.tsv` to `config/samples.tsv`.
-2. Create `resources/reference.txt` and `resources/sample_{a,b,c}.tsv`, each sample with a `value` column.
-3. Run the workflow with the local profile.
-4. Delete the inputs, `results/`, `logs/`, and `benchmarks/`. All are gitignored.
+`resources/`, `results/`, `logs/`, and `benchmarks/` are gitignored.
