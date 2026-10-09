@@ -29,7 +29,7 @@ set-threads:
 
 set-resources:              # tune from benchmarks/ TSVs after a real run
   bowtie2_index:
-    mem_mb: 32000 * attempt
+    mem_mb: 16000 * attempt
     runtime: 600m
   trim:
     mem_mb: 4000 * attempt
@@ -41,7 +41,7 @@ set-resources:              # tune from benchmarks/ TSVs after a real run
     mem_mb: 4000 * attempt
     runtime: 120m
   tracks:
-    mem_mb: 32000 * attempt
+    mem_mb: 16000 * attempt
     runtime: 120m
   macs3:
     mem_mb: 8000 * attempt

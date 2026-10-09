@@ -25,10 +25,10 @@ set-threads:
   tracks: 2
 
 set-resources:              # tune from benchmarks/ TSVs after a real run
-  bowtie2_index: {mem_mb: 32000}
+  bowtie2_index: {mem_mb: 16000}
   trim: {mem_mb: 4000}
   align: {mem_mb: 16000}
   dedup: {mem_mb: 4000}
-  tracks: {mem_mb: 32000}
+  tracks: {mem_mb: 16000}
   macs3: {mem_mb: 8000}
   idr: {mem_mb: 4000}
