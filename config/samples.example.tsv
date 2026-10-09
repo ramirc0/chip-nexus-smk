@@ -1,4 +1,14 @@
-sample_id	input	label
-sample_a	resources/sample_a.tsv	control
-sample_b	resources/sample_b.tsv	treated
-sample_c	resources/sample_c.tsv
+experiment	replicate	fastq_1	fastq_2	genome	barcodes	control
+twist	rep1	resources/reads/SRR1509029.fastq.gz		dm6
+twist	rep2	resources/reads/SRR1509030.fastq.gz		dm6
+ctcf	rep1	resources/reads/SRR6177963_1.fastq.gz	resources/reads/SRR6177963_2.fastq.gz	GRCh38
+rpb3	rep1	resources/reads/SRR7426256.fastq.gz		dm6	NNNNNCTGA,NNNNNTGAC,NNNNNGACT,NNNNNACTG	wce
+wce	rep1	resources/reads/SRR8433312.fastq.gz		dm6	none
+h2av	rep1	resources/reads/SRR7050211.fastq.gz		dm6	none
+h2av	rep1	resources/reads/SRR7050212.fastq.gz		dm6	none
+h2av	rep1	resources/reads/SRR7050213.fastq.gz		dm6	none
+h2av	rep2	resources/reads/SRR7050214.fastq.gz		dm6	none
+h2av	rep2	resources/reads/SRR7050215.fastq.gz		dm6	none
+h2av	rep2	resources/reads/SRR7050216.fastq.gz		dm6	none
+thr4p	rep1	resources/reads/SRR2968390.fastq.gz		sacCer3
+thr4p	rep2	resources/reads/SRR2968391.fastq.gz		sacCer3
