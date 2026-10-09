@@ -16,6 +16,7 @@ pysam = "0.24.*"
 pybigwig = "0.3.26.*"
 # Pseudoreps call gawk by name: mawk gives a different srand(0) stream.
 gawk = "5.*"
+python-zlib-ng = "*"
 
 [pypi-dependencies]
 bam2bw = "==0.4.1"
@@ -25,10 +26,20 @@ bam2bw = "==0.4.1"
 python = "3.9.*"
 idr = "2.0.4.2.*"
 bedtools = "2.31.1.*"
+python-zlib-ng = "*"
 
-# idr --plot only saves a PNG. Without this, a job that inherits DISPLAY picks a GUI backend.
-[feature.idr.activation.env]
+[feature.qc.dependencies]
+python = "3.13.*"
+polars = ">=1.43"
+matplotlib-base = ">=3.11"
+
+[feature.qc.pypi-dependencies]
+poikilos = { git = "https://github.com/ramirc0/poikilos" }
+
+# Plot jobs only save figures. Without this, a job that inherits DISPLAY picks a GUI backend.
+[feature.qc.activation.env]
 MPLBACKEND = "Agg"
 
 [environments]
 idr = { features = ["idr"], no-default-feature = true }
+qc = { features = ["qc"], no-default-feature = true }
