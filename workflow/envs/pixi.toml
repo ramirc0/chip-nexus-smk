@@ -1,16 +1,33 @@
 [workspace]
-name = "snakemake-template-envs"
-channels = ["conda-forge"]
+name = "chip-nexus-smk-envs"
+channels = ["conda-forge", "bioconda"]
 platforms = ["linux-64"]
 
+# macs3 3.0.5 is built for python 3.13 only.
 [dependencies]
-python = "3.12.*"
+python = "3.13.*"
 polars = ">=1.43"
-matplotlib = ">=3.11"
+cutadapt = "5.2.*"
+bowtie2 = "2.5.5.*"
+samtools = "1.24.*"
+bedtools = "2.31.1.*"
+macs3 = "3.0.5.*"
+pysam = "0.24.*"
+pybigwig = "0.3.26.*"
+# Pseudoreps call gawk by name: mawk gives a different srand(0) stream.
+gawk = "5.*"
 
 [pypi-dependencies]
-poikilos = { git = "https://github.com/ramirc0/poikilos", extras = ["labels"] }
+bam2bw = "==0.4.1"
 
-# Rule jobs only save figures. Without this, a job that inherits DISPLAY picks a GUI backend.
-[activation.env]
+# idr 2.0.4.2 pins numpy < 1.20, so it gets its own env.
+[feature.idr.dependencies]
+python = "3.9.*"
+idr = "2.0.4.2.*"
+
+# idr --plot only saves a PNG. Without this, a job that inherits DISPLAY picks a GUI backend.
+[feature.idr.activation.env]
 MPLBACKEND = "Agg"
+
+[environments]
+idr = { features = ["idr"], no-default-feature = true }
