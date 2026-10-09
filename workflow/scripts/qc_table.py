@@ -36,6 +36,7 @@ def build_parser():
         "idr-status": "IDR status files.",
         "idr-peaks": "Thresholded IDR peaks.",
         "reproducibility": "Reproducibility tables.",
+        "footprint": "Strand profiles around optimal summits.",
     }
     for kind, text in kinds.items():
         p.add_argument(f"--{kind}", nargs="*", default=[], help=text)
@@ -77,6 +78,14 @@ def main(argv=None):
         exp = Path(path).name.removesuffix(".reproducibility.tsv")
         table = pl.read_csv(path, separator="\t", infer_schema_length=0)
         rows += [(exp, "", k, v) for k, v in table.row(0, named=True).items()]
+
+    for path in args.footprint:
+        exp = Path(path).name.removesuffix(".footprint.tsv")
+        rows += [
+            (exp, n, k, v)
+            for n, metrics in _footprint(path).items()
+            for k, v in metrics.items()
+        ]
 
     pl.DataFrame(
         [(e, n, k, None if v is None else str(v)) for e, n, k, v in rows],
@@ -254,6 +263,40 @@ def _frip(path):
         else None
         for r in table.iter_rows(named=True)
     }
+
+
+def _footprint(path):
+    """Summarize each sample's strand profile.
+
+    Parameters
+    ----------
+    path : str
+        TSV with `sample`, `offset`, `plus`, and `minus`.
+
+    Returns
+    -------
+    dict of str to dict
+        Per sample: the offset of the + and - strand maxima, and the strand
+        ratio. The ratio is reads on the expected side (+ left of the summit,
+        - right of it) over reads on the other side. None without reads.
+    """
+    table = pl.read_csv(path, separator="\t")
+    out = {}
+    for sample, t in table.group_by("sample", maintain_order=True):
+        left, right = t.filter(pl.col("offset") < 0), t.filter(pl.col("offset") > 0)
+        expected = left["plus"].sum() + right["minus"].sum()
+        other = left["minus"].sum() + right["plus"].sum()
+        has_reads = expected + other > 0
+        out[sample[0]] = {
+            "footprint_plus_mode": t["offset"][t["plus"].arg_max()]
+            if has_reads
+            else None,
+            "footprint_minus_mode": t["offset"][t["minus"].arg_max()]
+            if has_reads
+            else None,
+            "footprint_strand_ratio": expected / other if other else None,
+        }
+    return out
 
 
 def _count(path):

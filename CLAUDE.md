@@ -15,11 +15,11 @@ pixi run snakemake --profile profiles/slurm
 ## Two pixi workspaces
 
 - Root `pixi.toml` is the launcher: Snakemake and its plugins, plus the `lint` env.
-- `workflow/envs/pixi.toml` holds the rule envs: `default` for the tools and `idr` (python 3.9, numpy < 1.20).
+- `workflow/envs/pixi.toml` holds the rule envs: `default` for the tools, `idr` (python 3.9, numpy < 1.20), and `qc` for figures.
 - `pyproject.toml` is ruff and numpydoc config only. pixi ignores it.
 - Rules use `locked=True`. After a manifest edit, run `pixi lock` in `workflow/envs/`.
 - Any manifest or lock change reruns every rule.
-- `SOFTWARE_ENV` and `IDR_ENV` resolve `../envs` relative to the rule file. New rule files MUST sit in `workflow/rules/`.
+- `SOFTWARE_ENV`, `IDR_ENV`, and `QC_ENV` resolve `../envs` relative to the rule file. New rule files MUST sit in `workflow/rules/`.
 
 ## Gotchas
 
@@ -35,9 +35,11 @@ pixi run snakemake --profile profiles/slurm
 - MACS3 caps peaks inside awk. `head` exits early and fails the pipe under pipefail.
 - Pseudoreps call `gawk`. mawk gives a different `srand(0)` stream.
 - SLURM nodes z1056, z1058, z1062, and z1016 lack `/data`, where the sra-chip FASTQs live. The slurm profile excludes them.
+- Figures use poikilos `plain` and `pk.save_figure()`, which writes SVG and PNG. Plot rules MUST declare both. Plot scripts read TSVs only. The numbers come from data rules in the `default` env.
 - Rules compress and decompress with `python -m zlib_ng.gzip_ng`, never `gzip` or `zcat`. Scripts use `zlib_ng.gzip_ng`. Tools that read `.gz` themselves (bowtie2, MACS3, bedtools, idr, polars) are left alone. It has no `zcat -f`, so FASTQs MUST be gzipped.
+- Scripts that import numpy MUST `export OMP_NUM_THREADS={threads}`. Otherwise numpy starts a thread per host core.
 - Resources MUST be flat values. Never derive `mem_mb` or `runtime` from input size.
-- Auto mode may block `pixi lock`, `pixi install`, or workflow runs. Ask the user to run them.
+- Auto mode may block `pixi lock`, `pixi install`, or workflow runs, especially for the poikilos git dependency. Ask the user to run them.
 
 ## Dedup contract
 

@@ -22,6 +22,7 @@ GENOMES = config["genomes"]
 # The workspace path is relative to the rule file. Every rule file sits in rules/.
 SOFTWARE_ENV = pixi(workspace="../envs", env=config["pixi_env"], locked=True)
 IDR_ENV = pixi(workspace="../envs", env="idr", locked=True)
+QC_ENV = pixi(workspace="../envs", env="qc", locked=True)
 
 # Dots separate name parts in file names, so names never contain one.
 NAME = r"[A-Za-z0-9][A-Za-z0-9_-]*"
@@ -367,27 +368,45 @@ def control_flags(exp):
         `-c` and every control replicate tagAlign. MACS3 pools them. Empty
         without a control.
     """
-    ctl = EXPERIMENTS[exp]["control"]
-    return ["-c", *control_tagaligns(exp)] if ctl else []
+    tagaligns = control_files(exp, "tagAlign.gz")
+    return ["-c", *tagaligns] if tagaligns else []
 
 
-def control_tagaligns(exp):
-    """Return the control replicate tagAligns of a ChIP experiment.
+def control_files(exp, suffix):
+    """Return one file per control replicate of a ChIP experiment.
 
     Parameters
     ----------
     exp : str
         ChIP experiment.
+    suffix : str
+        File suffix after the library prefix, such as `tagAlign.gz`.
 
     Returns
     -------
     list of str
-        One tagAlign per control replicate. Empty without a control.
+        `<prefix>.<suffix>` per control replicate. Empty without a control.
     """
     ctl = EXPERIMENTS[exp]["control"]
     if not ctl:
         return []
-    return [f"{lib_prefix(ctl, r)}.tagAlign.gz" for r in EXPERIMENTS[ctl]["reps"]]
+    return [f"{lib_prefix(ctl, r)}.{suffix}" for r in EXPERIMENTS[ctl]["reps"]]
+
+
+def pe_reps(exp):
+    """Return the paired-end replicates of an experiment.
+
+    Parameters
+    ----------
+    exp : str
+        Experiment.
+
+    Returns
+    -------
+    list of str
+        Replicates whose library is paired-end, in sheet order.
+    """
+    return [r for r in EXPERIMENTS[exp]["reps"] if LIBRARIES[exp, r]["layout"] == "pe"]
 
 
 def peaksets(exp):

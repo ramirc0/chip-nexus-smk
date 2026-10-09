@@ -38,6 +38,68 @@ rule frip:
         """
 
 
+# Reads per 500 bp bin, the deeptools default. Tracks hold allow-list
+# chromosomes only, so bins do too.
+rule fingerprint:
+    input:
+        plus=f"{OUTDIR}/{{exp}}/{{rep}}/{{exp}}.{{rep}}.+.bw",
+        minus=f"{OUTDIR}/{{exp}}/{{rep}}/{{exp}}.{{rep}}.-.bw",
+    output:
+        f"{OUTDIR}/{{exp}}/{{rep}}/{{exp}}.{{rep}}.fingerprint.tsv",
+    log:
+        f"{LOGDIR}/fingerprint/{{exp}}.{{rep}}.txt",
+    benchmark:
+        f"{BENCHDIR}/fingerprint/{{exp}}.{{rep}}.tsv"
+    software:
+        SOFTWARE_ENV
+    shell:
+        r"""
+        exec &> >(tee {log:q})
+
+        # Otherwise numpy starts one thread per core of the host.
+        export OMP_NUM_THREADS={threads}
+
+        python workflow/scripts/fingerprint.py \
+            --plus {input.plus:q} \
+            --minus {input.minus:q} \
+            --bin-size 500 \
+            --output {output:q}
+        """
+
+
+# Strand profile of each replicate and the pool around the optimal summits.
+rule footprint:
+    input:
+        peaks=f"{OUTDIR}/{{exp}}/{{exp}}.optimal.narrowPeak.gz",
+        plus=lambda w: [f"{lib_prefix(w.exp, s)}.+.bw" for s in samples_of(w.exp)],
+        minus=lambda w: [f"{lib_prefix(w.exp, s)}.-.bw" for s in samples_of(w.exp)],
+    output:
+        f"{OUTDIR}/{{exp}}/{{exp}}.footprint.tsv",
+    params:
+        samples=lambda w: samples_of(w.exp),
+    log:
+        f"{LOGDIR}/footprint/{{exp}}.txt",
+    benchmark:
+        f"{BENCHDIR}/footprint/{{exp}}.tsv"
+    software:
+        SOFTWARE_ENV
+    shell:
+        r"""
+        exec &> >(tee {log:q})
+
+        # Otherwise numpy starts one thread per core of the host.
+        export OMP_NUM_THREADS={threads}
+
+        python workflow/scripts/footprint.py \
+            --peaks {input.peaks:q} \
+            --samples {params.samples:q} \
+            --plus {input.plus:q} \
+            --minus {input.minus:q} \
+            --width 100 \
+            --output {output:q}
+        """
+
+
 rule qc_table:
     input:
         barcode=[f"{lib_prefix(e, r)}.cutadapt.barcode.json" for e, r in LIBRARIES],
@@ -59,6 +121,7 @@ rule qc_table:
         ],
         idr_peaks=[idr_peaks(e, p) for e in CHIPS for p in idr_pairs(e)],
         reproducibility=[f"{OUTDIR}/{e}/{e}.reproducibility.tsv" for e in CHIPS],
+        footprint=[f"{OUTDIR}/{e}/{e}.footprint.tsv" for e in CHIPS],
     output:
         f"{OUTDIR}/qc.tsv",
     log:
@@ -83,5 +146,6 @@ rule qc_table:
             --idr-status {input.idr_status:q} \
             --idr-peaks {input.idr_peaks:q} \
             --reproducibility {input.reproducibility:q} \
+            --footprint {input.footprint:q} \
             --output {output:q}
         """

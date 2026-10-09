@@ -23,7 +23,8 @@ ENCODE pipeline.
 6. **Peaks** with MACS3 on each replicate, the pool, and their pseudoreplicates.
 7. **IDR** on true replicate pairs, self-pseudoreplicates, and pooled
    pseudoreplicates. Then pick the ENCODE conservative and optimal sets.
-8. **QC**: per-step read counts, NRF, PBC1, PBC2, FRiP, and reproducibility.
+8. **QC**: per-step read counts, NRF, PBC1, PBC2, FRiP, reproducibility, and
+   the strand footprint at summits. Plus the figures listed under Outputs.
 
 ## Sample sheet
 
@@ -75,9 +76,17 @@ Under `results/<run_id>/<experiment>/`:
 | `idr/<exp>.<pair>.idr.narrowPeak.gz` | IDR peaks at 0.05, after the blacklist. |
 | `<exp>.{conservative,optimal}.narrowPeak.gz` | ENCODE reproducible peak sets. |
 | `<exp>.reproducibility.tsv` | Peak counts, rescue and self-consistency ratios. |
+| `<exp>.footprint.{tsv,svg}` | Mean + and - strand 5' ends within 100 bp of the optimal summits. + ends should peak left of the summit and - ends right of it. |
+| `<exp>.fingerprint.svg` | Cumulative reads over 500 bp bins sorted by count, ChIP and control. Data in `<rep>/<exp>.<rep>.fingerprint.tsv`. |
+| `<exp>.duplicates.svg` | Fraction of reads per duplicate group size, per replicate. |
+| `<exp>.insert_size.svg` | Insert sizes of paired-end replicates. |
+| `idr/<exp>.<pair>.idr.svg` | The four `idr --plot` panels, redrawn from the IDR output. |
 
 `results/<run_id>/qc.tsv` holds every metric in long form: `experiment`,
-`replicate`, `metric`, `value`.
+`replicate`, `metric`, `value`. `results/<run_id>/qc_funnel.svg` shows where
+each library's reads go, from raw reads to distinct reads.
+
+Every figure is an SVG with a PNG beside it.
 
 ## Choices
 
@@ -153,6 +162,7 @@ a second pixi workspace, `workflow/envs/`, with two environments:
 - `default`: cutadapt, bowtie2, samtools, bedtools, MACS3, bam2bw, gawk, and
   polars.
 - `idr`: IDR 2.0.4.2, which needs python 3.9 and numpy < 1.20.
+- `qc`: matplotlib and poikilos, for the figures.
 
 Jobs install the envs on first use. After a manifest edit, run `pixi lock` in
 `workflow/envs/`. Any change to a manifest or lock reruns every rule.

@@ -66,7 +66,7 @@ rule macs3:
         treatment=lambda w: (
             f"{OUTDIR}/{w.exp}/{w.peakset.split('.')[0]}/{w.exp}.{w.peakset}.tagAlign.gz"
         ),
-        controls=lambda w: control_tagaligns(w.exp),
+        controls=lambda w: control_files(w.exp, "tagAlign.gz"),
         blacklist=lambda w: genome_file(w.exp, "blacklist"),
     output:
         peaks=f"{OUTDIR}/{{exp}}/peaks/{{exp}}.{{peakset}}.narrowPeak.gz",
@@ -127,7 +127,6 @@ rule idr:
     output:
         peaks=f"{OUTDIR}/{{exp}}/idr/{{exp}}.{{pair}}.idr.narrowPeak.gz",
         raw=f"{OUTDIR}/{{exp}}/idr/{{exp}}.{{pair}}.idr.txt.gz",
-        plot=f"{OUTDIR}/{{exp}}/idr/{{exp}}.{{pair}}.idr.png",
         status=f"{OUTDIR}/{{exp}}/idr/{{exp}}.{{pair}}.idr.status",
     params:
         threshold=IDR_THRESHOLD,
@@ -153,14 +152,12 @@ rule idr:
             --output-file "$workdir/idr" \
             --rank p.value \
             --soft-idr-threshold {params.threshold:q} \
-            --plot \
             --use-best-multisummit-IDR \
             2> "$workdir/stderr"
         then
             cat "$workdir/stderr" >&2
             grep -q 'at least 20 peaks post-merge' "$workdir/stderr"
             : > "$workdir/idr"
-            : > "$workdir/idr.png"
             echo too_few_peaks > {output.status:q}
         else
             cat "$workdir/stderr" >&2
@@ -168,7 +165,6 @@ rule idr:
         fi
 
         python -m zlib_ng.gzip_ng -cn "$workdir/idr" > {output.raw:q}
-        mv "$workdir/idr.png" {output.plot:q}
 
         # Column 12 is the global -log10(IDR).
         awk -v min={params.min_log10:q} 'BEGIN {{ OFS = "\t" }}
