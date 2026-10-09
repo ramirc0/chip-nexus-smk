@@ -3,12 +3,38 @@ outdir: results
 pixi_env: default
 run_id: default          # outputs go under results/<run_id>/; override per run
 
-references:
-  reference: resources/reference.txt
+# 5' read layout when the sheet's `barcodes` cell is empty. N = UMI base.
+# Comma-separate a barcode set, e.g. NNNNNCTGA,NNNNNTGAC.
+barcodes: NNNNNCTGA
 
-analyze:
-  window: 100
-  threshold: 0.5
-  metric: mean
-  normalize: true
-  random_state: null
+# MACS3 window centered on each 5' end (--shift -w/2 --extsize w).
+smooth_window: 150
+
+# chrom_sizes is the allow-list: everything after dedup keeps only these
+# chromosomes. Names and lengths MUST match <fasta>.fai.
+genomes:
+  GRCh38:
+    fasta: /data/zusers/ramirezc/static/GRCh38_no_alt_analysis_set_GCA_000001405.15.fasta
+    chrom_sizes: /data/zusers/ramirezc/static/GRCh38_no_alt_analysis_set_GCA_000001405.15.minimal.chrom.sizes
+    blacklist: /data/zusers/ramirezc/static/ENCFF356LFX.bed
+    gsize: 2.7e9
+  mm10:
+    fasta: /data/zusers/ramirezc/static/mm10_no_alt_analysis_set_ENCODE.fasta
+    chrom_sizes: /data/zusers/ramirezc/static/mm10_no_alt_analysis_set_ENCODE.minimal.chrom.sizes
+    blacklist: /data/zusers/ramirezc/static/ENCFF547MET.bed
+    gsize: 1.87e9
+  dm6:
+    fasta: /data/zusers/ramirezc/static/dm6/dm6.fa
+    chrom_sizes: /data/zusers/ramirezc/static/dm6/dm6.minimal.chrom.sizes
+    blacklist: /data/zusers/ramirezc/static/dm6/dm6-blacklist.v2.bed
+    gsize: 1.2e8
+  sacCer3:
+    fasta: /data/zusers/ramirezc/static/sacCer3/sacCer3.fa
+    chrom_sizes: /data/zusers/ramirezc/static/sacCer3/sacCer3.minimal.chrom.sizes
+    blacklist: /zata/data/zlab/common/genome/empty.bed
+    gsize: 1.2e7
+  ASM294v2:
+    fasta: /data/zusers/ramirezc/static/ASM294v2/ASM294v2.fa
+    chrom_sizes: /data/zusers/ramirezc/static/ASM294v2/ASM294v2.minimal.chrom.sizes
+    blacklist: /zata/data/zlab/common/genome/empty.bed
+    gsize: 1.26e7
