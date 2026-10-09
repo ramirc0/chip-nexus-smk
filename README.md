@@ -105,7 +105,7 @@ snakemake --profile profiles/slurm                 # SLURM
 ```
 
 The first run builds a bowtie2 index per genome under `results/refs/`. GRCh38
-takes hours; build it once and reuse `results/refs/` across runs.
+takes hours. Later runs reuse it.
 
 Tune `set-resources` in the profiles from the `benchmarks/<run_id>/` TSVs after
 a first run.
