@@ -71,7 +71,10 @@ def build_parser():
     """
     p = argparse.ArgumentParser(description="Write a synthetic ChIP-nexus run.")
     p.add_argument(
-        "-o", "--outdir", default="resources/fixture", help="Output directory."
+        "-o",
+        "--outdir",
+        default=".tests/integration/fixture/data",
+        help="Output directory.",
     )
     p.add_argument("--sites", type=int, default=200, help="Planted binding sites.")
     p.add_argument("--seed", type=int, default=0, help="Random seed.")

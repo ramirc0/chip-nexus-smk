@@ -121,16 +121,20 @@ a first run.
 
 ## Testing
 
-`tests/make_fixture.py` writes a synthetic run: a random genome, reads around
-200 planted sites, and the counts the workflow should report.
-`tests/check_run.py` checks any finished run for internal consistency, and a
-fixture run against those counts.
+Integration tests follow the Snakemake layout, one case per directory under
+`.tests/integration/`. Each case writes its data to a gitignored `data/`.
+`.tests/integration/check_run.py` checks any finished run for internal
+consistency.
+
+`fixture/make_fixture.py` writes a synthetic run: a random genome, reads around
+200 planted sites, and the counts the workflow should report. `check_run.py`
+checks a fixture run against those counts too.
 
 ```bash
-pixi run --manifest-path workflow/envs/pixi.toml python tests/make_fixture.py
-snakemake --profile profiles/local --configfile resources/fixture/config.yaml
-pixi run --manifest-path workflow/envs/pixi.toml \
-    python tests/check_run.py results/fixture --expected resources/fixture/expected.json
+pixi run --manifest-path workflow/envs/pixi.toml python .tests/integration/fixture/make_fixture.py
+snakemake --profile profiles/local --configfile .tests/integration/fixture/data/config.yaml
+pixi run --manifest-path workflow/envs/pixi.toml python .tests/integration/check_run.py \
+    results/fixture --expected .tests/integration/fixture/data/expected.json
 ```
 
 ## Conventions
