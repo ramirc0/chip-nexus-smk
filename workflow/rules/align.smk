@@ -4,6 +4,8 @@
 # MAPQ >= 30 and -F 1804 follow ENCODE. bowtie2 writes mates next to each
 # other, so fixmate needs no name sort. It clears the proper-pair flag of
 # mates whose partner was filtered, and the second -f 2 drops them.
+# --reorder keeps the order of tied reads, and so the pseudoreps, independent
+# of thread timing.
 rule align:
     input:
         fastq=f"{OUTDIR}/{{exp}}/{{rep}}/{{exp}}.{{rep}}.trim.fastq.gz",
@@ -49,6 +51,7 @@ rule align:
 
         bowtie2 \
             --end-to-end \
+            --reorder \
             -p {threads} \
             -x {params.index:q} \
             {params.reads:q} {input.fastq:q} \
