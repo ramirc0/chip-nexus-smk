@@ -114,13 +114,17 @@ consistency.
 
 `fixture/make_fixture.py` writes a synthetic run: a random genome, reads around
 200 planted sites, and the counts the workflow should report. `check_run.py`
-checks a fixture run against those counts too.
+checks a fixture run against those counts too. A second run under another
+`run_id` MUST reproduce every tagAlign, and `--rerun` checks that.
 
 ```bash
 pixi run --manifest-path workflow/envs/pixi.toml python .tests/integration/fixture/make_fixture.py
 snakemake --profile profiles/local --configfile .tests/integration/fixture/data/config.yaml
+snakemake --profile profiles/local --configfile .tests/integration/fixture/data/config.yaml \
+    --config run_id=fixture_b
 pixi run --manifest-path workflow/envs/pixi.toml python .tests/integration/check_run.py \
-    results/fixture --expected .tests/integration/fixture/data/expected.json
+    results/fixture --expected .tests/integration/fixture/data/expected.json \
+    --rerun results/fixture_b
 ```
 
 `sra/` runs the first 2M reads of 14 SRA runs on dm6, GRCh38, and sacCer3.

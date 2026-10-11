@@ -10,10 +10,12 @@ For each library, the run MUST satisfy:
 - Under 0.5% of deliverable reads contain the adapter.
 
 With `--expected` (from make_fixture.py), the QC table and track sums MUST
-also match exactly. Exits non-zero if any check fails.
+also match exactly. With `--rerun`, every tagAlign MUST match the other run's.
+Exits non-zero if any check fails.
 """
 
 import argparse
+import hashlib
 import json
 import sys
 from pathlib import Path
@@ -38,6 +40,7 @@ def build_parser():
     p = argparse.ArgumentParser(description="Check a finished run.")
     p.add_argument("rundir", help="Run directory, results/<run_id>.")
     p.add_argument("--expected", help="expected.json from make_fixture.py.")
+    p.add_argument("--rerun", help="Run directory of the same config, run again.")
     return p
 
 
@@ -108,6 +111,11 @@ def main(argv=None):
             check, f"{exp}.pooled", Path(str(pooled).removesuffix(".tagAlign.gz")), r1
         )
 
+    if args.rerun:
+        for path in sorted(run.glob("*/*/*.tagAlign.gz")):
+            other = Path(args.rerun, path.relative_to(run))
+            check(f"{path.name} == rerun", _digest(path), _digest(other))
+
     print(f"{len(failures)} failed")
     sys.exit(1 if failures else 0)
 
@@ -175,6 +183,23 @@ def _check_tracks(check, name, prefix, r1):
         lines = sum(1 for _ in f)
     check(f"{name} track sum == tagAlign lines", track, lines)
     check(f"{name} tagAlign lines == R1 on kept", lines, r1)
+
+
+def _digest(path):
+    """Hash the decompressed contents of a gzipped file.
+
+    Parameters
+    ----------
+    path : pathlib.Path
+        The gzipped file.
+
+    Returns
+    -------
+    str
+        MD5 hex digest.
+    """
+    with gzip_ng.open(path, "rb") as f:
+        return hashlib.file_digest(f, "md5").hexdigest()
 
 
 def _bw_sum(path):
