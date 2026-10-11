@@ -10,7 +10,8 @@ For each library, the run MUST satisfy:
 - Under 0.5% of deliverable reads contain the adapter.
 
 With `--expected` (from make_fixture.py), the QC table and track sums MUST
-also match exactly. With `--rerun`, every tagAlign MUST match the other run's.
+also match exactly. With `--rerun`, every tagAlign and narrowPeak MUST match
+the other run's.
 Exits non-zero if any check fails.
 """
 
@@ -112,7 +113,9 @@ def main(argv=None):
         )
 
     if args.rerun:
-        for path in sorted(run.glob("*/*/*.tagAlign.gz")):
+        for path in sorted(
+            [*run.rglob("*.tagAlign.gz"), *run.rglob("*.narrowPeak.gz")]
+        ):
             other = Path(args.rerun, path.relative_to(run))
             check(f"{path.name} == rerun", _digest(path), _digest(other))
 
