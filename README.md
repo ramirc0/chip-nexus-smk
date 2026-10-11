@@ -141,7 +141,7 @@ pixi run --manifest-path workflow/envs/pixi.toml python .tests/integration/check
 They include both layouts, a barcode set, unbarcoded libraries, and a control.
 `sra/subsample.py` copies them from the sra-chip store.
 `sra/config.yaml` layers over the template, which holds the genomes. The run
-needs `/data` and takes about an hour on SLURM.
+needs `/data`. It took 15 minutes on SLURM with the indexes already built.
 
 ```bash
 pixi run --manifest-path workflow/envs/pixi.toml python .tests/integration/sra/subsample.py
