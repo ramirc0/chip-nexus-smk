@@ -15,6 +15,12 @@ snakemake-software-deployment-plugin-pixi = { git = "https://github.com/cademirc
 snakemake-executor-plugin-slurm = "==2.8.0"
 snakemake-executor-plugin-slurm-jobstep = "==0.6.1"
 
+# Cluster setting, not workflow logic. Nodes mix Broadwell and Cascade Lake.
+# OpenBLAS picks a different kernel on each, which shifts MACS3 summits. SLURM
+# jobs inherit the launcher's environment.
+[activation.env]
+OPENBLAS_CORETYPE = "Haswell"
+
 [feature.lint.dependencies]
 ruff = ">=0.16.9,<0.17"
 numpydoc = ">=1.11.0,<2"
