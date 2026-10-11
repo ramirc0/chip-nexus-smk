@@ -1,8 +1,8 @@
 # CLAUDE.md
 
 ENCODE-style ChIP-nexus workflow. README.md holds the steps, sample sheet,
-outputs, the behavior choices with their reasons, and the style conventions.
-Follow it.
+outputs, and style conventions. The behavior choices and their reasons live
+in `../COMPARISON.md`, local and untracked. Follow both.
 
 ## Commands
 

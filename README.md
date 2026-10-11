@@ -88,20 +88,6 @@ each library's reads go, from raw reads to distinct reads.
 
 Every figure is an SVG with a PNG beside it.
 
-## Choices
-
-| Choice | Reason |
-|---|---|
-| Fixed barcode allows 1 substitution, and N in the read matches anything. | Near misses are substitutions, 1.5-13% of reads. |
-| R1 adapter is the 22 nt prefix `AGATCGGAAGAGCACACGTCTG`. | Reads carry the TruSeq tail, not the paper's BamHI tail. The full adapter misses read-through past about 32 nt. |
-| The read's last base is kept. | The paper removes positions 1-9 only. The 2014 code's extra trim is an off-by-one. |
-| Dedup key is 5' end, strand, and UMI (SE), or both ends, orientation, and UMI (PE). | The paper's key. Unlike the 2014 code, read length is not part of it. |
-| A ChIP library with no barcode is not deduplicated. A control without one is deduplicated by position. | Without a UMI, position dedup caps signal at peaks. |
-| MACS3 `--nomodel --shift -75 --extsize 150 --keep-dup all --call-summits -p 0.01`. | Centers a 150 bp window on each 5' end. Dedup already happened. |
-| Peaks capped at 500,000, IDR 0.05 ranked by p-value. | ENCODE TF ChIP-seq settings. |
-| Tracks hold R1 only, as raw counts. | The R1 5' end is the λ-exonuclease stop. R2 marks the sonication end. |
-| No strand cross-correlation, no MACS signal tracks. | The 5' count tracks are the signal. |
-
 ## Running
 
 ```bash
