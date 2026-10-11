@@ -1,0 +1,3 @@
+# Layer over config/config.yaml.template, which holds the genomes.
+samples: .tests/integration/sra/samples.tsv
+run_id: sra

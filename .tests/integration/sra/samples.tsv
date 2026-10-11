@@ -1,0 +1,14 @@
+experiment	replicate	fastq_1	fastq_2	genome	barcodes	control
+twist	rep1	.tests/integration/sra/data/SRR1509029.fastq.gz		dm6
+twist	rep2	.tests/integration/sra/data/SRR1509030.fastq.gz		dm6
+ctcf	rep1	.tests/integration/sra/data/SRR6177963_1.fastq.gz	.tests/integration/sra/data/SRR6177963_2.fastq.gz	GRCh38
+rpb3	rep1	.tests/integration/sra/data/SRR7426256.fastq.gz		dm6	NNNNNCTGA,NNNNNTGAC,NNNNNGACT,NNNNNACTG	wce
+wce	rep1	.tests/integration/sra/data/SRR8433312.fastq.gz		dm6	none
+h2av	rep1	.tests/integration/sra/data/SRR7050211.fastq.gz		dm6	none
+h2av	rep1	.tests/integration/sra/data/SRR7050212.fastq.gz		dm6	none
+h2av	rep1	.tests/integration/sra/data/SRR7050213.fastq.gz		dm6	none
+h2av	rep2	.tests/integration/sra/data/SRR7050214.fastq.gz		dm6	none
+h2av	rep2	.tests/integration/sra/data/SRR7050215.fastq.gz		dm6	none
+h2av	rep2	.tests/integration/sra/data/SRR7050216.fastq.gz		dm6	none
+thr4p	rep1	.tests/integration/sra/data/SRR2968390.fastq.gz		sacCer3
+thr4p	rep2	.tests/integration/sra/data/SRR2968391.fastq.gz		sacCer3

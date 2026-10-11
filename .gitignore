@@ -1,7 +1,6 @@
 logs
 results
 config/*.tsv
-!config/samples.example.tsv
 # copy from config.yaml.template, then edit
 config/config.yaml
 .snakemake

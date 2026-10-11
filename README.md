@@ -106,11 +106,11 @@ Every figure is an SVG with a PNG beside it.
 
 ```bash
 cp config/config.yaml.template config/config.yaml  # then edit
-cp config/samples.example.tsv config/samples.tsv   # then edit
-pixi shell                                         # launcher env
-snakemake -n -p --profile profiles/local           # dry run
-snakemake --profile profiles/local                 # local
-snakemake --profile profiles/slurm                 # SLURM
+cp .tests/integration/sra/samples.tsv config/samples.tsv  # then edit
+pixi shell                                                 # launcher env
+snakemake -n -p --profile profiles/local                   # dry run
+snakemake --profile profiles/local                         # local
+snakemake --profile profiles/slurm                         # SLURM
 ```
 
 The first run builds a bowtie2 index per genome under `results/refs/`. GRCh38
@@ -135,6 +135,19 @@ pixi run --manifest-path workflow/envs/pixi.toml python .tests/integration/fixtu
 snakemake --profile profiles/local --configfile .tests/integration/fixture/data/config.yaml
 pixi run --manifest-path workflow/envs/pixi.toml python .tests/integration/check_run.py \
     results/fixture --expected .tests/integration/fixture/data/expected.json
+```
+
+`sra/` runs the first 2M reads of 14 SRA runs on dm6, GRCh38, and sacCer3.
+They include both layouts, a barcode set, unbarcoded libraries, and a control.
+`sra/subsample.py` copies them from the sra-chip store.
+`sra/config.yaml` layers over the template, which holds the genomes. The run
+needs `/data` and takes about an hour on SLURM.
+
+```bash
+pixi run --manifest-path workflow/envs/pixi.toml python .tests/integration/sra/subsample.py
+snakemake --profile profiles/slurm \
+    --configfile config/config.yaml.template .tests/integration/sra/config.yaml
+pixi run --manifest-path workflow/envs/pixi.toml python .tests/integration/check_run.py results/sra
 ```
 
 ## Conventions

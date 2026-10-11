@@ -57,6 +57,6 @@ Outputs:
 
 1. `pixi run lint`.
 2. Synthetic fixture, exact expected counts (commands in README.md "Testing"). `.tests/integration/check_run.py` MUST report 0 failed.
-3. Real subsamples: `config/samples.example.tsv` points at `resources/reads/`, the first 2M reads of each run. Run with the slurm profile and run `.tests/integration/check_run.py` on the result.
+3. Real subsamples: `.tests/integration/sra/`, the first 2M reads of each run. Commands in README.md "Testing". `check_run.py` MUST report 0 failed.
 
 `resources/`, `results/`, `logs/`, `benchmarks/`, and `.tests/integration/*/data/` are gitignored.
