@@ -183,3 +183,25 @@ a second pixi workspace, `workflow/envs/`, with two environments:
 
 Jobs install the envs on first use. After a manifest edit, run `pixi lock` in
 `workflow/envs/`. Any change to a manifest or lock reruns every rule.
+
+## References
+
+Danecek, Petr, James K. Bonfield, Jennifer Liddle, et al. 2021. “Twelve Years of SAMtools and BCFtools.” GigaScience 10 (2): giab008. https://doi.org/10.1093/gigascience/giab008.
+
+He, Qiye, Jeff Johnston, and Julia Zeitlinger. 2015. “ChIP-Nexus Enables Improved Detection of in Vivo Transcription Factor Binding Footprints.” Nature Biotechnology 33 (4): 395–401. https://doi.org/10.1038/nbt.3121.
+
+Landt, Stephen G., Georgi K. Marinov, Anshul Kundaje, et al. 2012. “ChIP-Seq Guidelines and Practices of the ENCODE and modENCODE Consortia.” Genome Research 22 (9): 1813–31. https://doi.org/10.1101/gr.136184.111.
+
+Langmead, Ben, and Steven L. Salzberg. 2012. “Fast Gapped-Read Alignment with Bowtie 2.” Nature Methods 9 (4): 357–59. https://doi.org/10.1038/nmeth.1923.
+
+Li, Qunhua, James B. Brown, Haiyan Huang, and Peter J. Bickel. 2011. “Measuring Reproducibility of High-Throughput Experiments.” The Annals of Applied Statistics 5 (3): 1752–79. https://doi.org/10.1214/11-AOAS466.
+
+Martin, Marcel. 2011. “Cutadapt Removes Adapter Sequences from High-Throughput Sequencing Reads.” EMBnet.Journal 17 (1): 10–12. https://doi.org/10.14806/ej.17.1.200.
+
+Mölder, Felix, Kim Philipp Jablonski, Brice Letcher, et al. 2021. “Sustainable Data Analysis with Snakemake.” F1000Research 10 (January): 33. https://doi.org/10.12688/f1000research.29032.3.
+
+Quinlan, Aaron R., and Ira M. Hall. 2010. “BEDTools: A Flexible Suite of Utilities for Comparing Genomic Features.” Bioinformatics 26 (6): 841–42. https://doi.org/10.1093/bioinformatics/btq033.
+
+Schreiber, Jacob. n.d. Bam2bw. Github. Accessed October 11, 2026. https://github.com/jmschrei/bam2bw.
+
+Zhang, Yong, Tao Liu, Clifford A. Meyer, et al. 2008. “Model-Based Analysis of ChIP-Seq (MACS).” Genome Biology 9 (9): R137. https://doi.org/10.1186/gb-2008-9-9-r137.
