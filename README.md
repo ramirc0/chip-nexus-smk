@@ -115,7 +115,7 @@ consistency.
 `fixture/make_fixture.py` writes a synthetic run: a random genome, reads around
 200 planted sites, and the counts the workflow should report. `check_run.py`
 checks a fixture run against those counts too. A second run under another
-`run_id` MUST reproduce every tagAlign, and `--rerun` checks that.
+`run_id` MUST reproduce every tagAlign and narrowPeak, and `--rerun` checks that.
 
 ```bash
 pixi run --manifest-path workflow/envs/pixi.toml python .tests/integration/fixture/make_fixture.py
