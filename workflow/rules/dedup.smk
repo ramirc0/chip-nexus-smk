@@ -1,5 +1,5 @@
 # Deduplication. Swap the method by replacing this file. Any replacement MUST
-# keep the dedup contract in CLAUDE.md: same inputs, the `_<KEY>` read ID
+# keep the dedup contract in .claude/CLAUDE.md: same inputs, the `_<KEY>` read ID
 # suffix as the UMI, and the same deliverable BAM and `.dedup.tsv` outputs.
 
 
