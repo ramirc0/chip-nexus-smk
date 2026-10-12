@@ -40,6 +40,7 @@ pixi run snakemake --profile profiles/slurm
 - Rules compress and decompress with `python -m zlib_ng.gzip_ng`, never `gzip` or `zcat`. Scripts use `zlib_ng.gzip_ng`. Tools that read `.gz` themselves (bowtie2, MACS3, bedtools, idr, polars) are left alone. It has no `zcat -f`, so FASTQs MUST be gzipped.
 - Scripts that import numpy MUST `export OMP_NUM_THREADS={threads}`. Otherwise numpy starts a thread per host core.
 - Resources MUST be flat values. Never derive `mem_mb` or `runtime` from input size.
+- Run-specific resources MUST go in an untracked `scratch/*.profile.yaml` passed with `--workflow-profile`, never in `profiles/`. A top-level key there or on the CLI replaces the profile's whole key, so restate every `set-resources` rule.
 - Auto mode may block `pixi lock`, `pixi install`, or workflow runs, especially for the poikilos git dependency. Ask the user to run them.
 
 ## Dedup contract
