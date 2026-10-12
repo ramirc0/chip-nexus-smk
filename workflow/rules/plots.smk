@@ -66,7 +66,6 @@ rule plot_duplicates:
 
         python workflow/scripts/plot_duplicates.py \
             --input {input:q} \
-            --title {wildcards.exp:q} \
             --output {output.svg:q}
         """
 
@@ -90,7 +89,6 @@ rule plot_insert_size:
 
         python workflow/scripts/plot_insert_size.py \
             --input {input:q} \
-            --title {wildcards.exp:q} \
             --output {output.svg:q}
         """
 

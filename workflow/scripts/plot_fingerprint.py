@@ -49,12 +49,14 @@ def main(argv=None):
         ls=":",
         label="uniform",
     )
-    styles = {p: "-" for p in args.chip} | {p: "--" for p in args.control}
-    for path, style in styles.items():
+    curves = [(p, "-", "") for p in args.chip] + [
+        (p, "--", "control ") for p in args.control
+    ]
+    for path, style, prefix in curves:
         x, y = _curve(path)
-        ax.plot(x, y, ls=style, label=Path(path).name.removesuffix(".fingerprint.tsv"))
+        ax.plot(x, y, ls=style, label=prefix + Path(path).name.split(".")[1])
     ax.set(xlabel="Fraction of bins, by read count", ylabel="Fraction of reads")
-    ax.legend(loc="upper left")
+    fig.legend(*ax.get_legend_handles_labels(), loc="outside right upper")
     pk.despine(ax)
     pk.save_figure(fig, args.output)
     plt.close(fig)

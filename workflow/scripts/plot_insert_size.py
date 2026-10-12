@@ -24,7 +24,6 @@ def build_parser():
     p.add_argument(
         "-i", "--input", nargs="+", required=True, help="samtools stats files."
     )
-    p.add_argument("--title", default="", help="Axes title.")
     p.add_argument(
         "-o", "--output", required=True, help="SVG to write (PNG beside it)."
     )
@@ -50,10 +49,10 @@ def main(argv=None):
         ax.plot(
             size[keep],
             fraction[keep],
-            label=Path(path).name.removesuffix(".samtools_stats.txt"),
+            label=Path(path).name.split(".")[1],
         )
-    ax.set(xlabel="Insert size (bp)", ylabel="Fraction of pairs", title=args.title)
-    ax.legend(loc="upper right")
+    ax.set(xlabel="Insert size (bp)", ylabel="Fraction of pairs")
+    fig.legend(*ax.get_legend_handles_labels(), loc="outside right upper")
     pk.despine(ax)
     pk.save_figure(fig, args.output)
     plt.close(fig)

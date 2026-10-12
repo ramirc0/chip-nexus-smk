@@ -24,7 +24,6 @@ def build_parser():
     p.add_argument(
         "-i", "--input", nargs="+", required=True, help="Dedup histogram TSVs."
     )
-    p.add_argument("--title", default="", help="Axes title.")
     p.add_argument(
         "-o", "--output", required=True, help="SVG to write (PNG beside it)."
     )
@@ -50,15 +49,14 @@ def main(argv=None):
             hist["group_size"],
             hist["reads"] / hist["reads"].sum(),
             marker="o",
-            label=Path(path).name.removesuffix(".dedup.tsv"),
+            label=Path(path).name.split(".")[1],
         )
     ax.set(
         xscale="log",
         xlabel="Duplicate group size",
         ylabel="Fraction of reads",
-        title=args.title,
     )
-    ax.legend(loc="upper right")
+    fig.legend(*ax.get_legend_handles_labels(), loc="outside right upper")
     pk.despine(ax)
     pk.save_figure(fig, args.output)
     plt.close(fig)
