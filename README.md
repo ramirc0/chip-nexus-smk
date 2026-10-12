@@ -84,12 +84,12 @@ Under `results/<run_id>/<experiment>/`:
 | `<exp>.footprint.{tsv,svg}` | Mean + and - strand 5' ends within 100 bp of the top 1,000 optimal summits. + ends should peak left of the summit and - ends right of it. |
 | `<exp>.fingerprint.svg` | Cumulative reads over 500 bp bins sorted by count, ChIP and control. Data in `<rep>/<exp>.<rep>.fingerprint.tsv`. |
 | `<exp>.duplicates.svg` | Fraction of reads per duplicate group size, per replicate. |
+| `<exp>.funnel.svg` | Where each replicate's reads go, from raw reads to distinct reads. |
 | `<exp>.insert_size.svg` | Insert sizes of paired-end replicates. |
 | `idr/<exp>.<pair>.idr.svg` | The four `idr --plot` panels, redrawn from the IDR output. |
 
 `results/<run_id>/qc.tsv` holds every metric in long form: `experiment`,
-`replicate`, `metric`, `value`. `results/<run_id>/qc_funnel.svg` shows where
-each library's reads go, from raw reads to distinct reads.
+`replicate`, `metric`, `value`.
 
 Every figure is an SVG with a PNG beside it.
 

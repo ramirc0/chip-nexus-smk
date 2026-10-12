@@ -124,12 +124,12 @@ rule plot_funnel:
     input:
         f"{OUTDIR}/qc.tsv",
     output:
-        svg=f"{OUTDIR}/qc_funnel.svg",
-        png=f"{OUTDIR}/qc_funnel.png",
+        svg=f"{OUTDIR}/{{exp}}/{{exp}}.funnel.svg",
+        png=f"{OUTDIR}/{{exp}}/{{exp}}.funnel.png",
     log:
-        f"{LOGDIR}/plot_funnel.txt",
+        f"{LOGDIR}/plot_funnel/{{exp}}.txt",
     benchmark:
-        f"{BENCHDIR}/plot_funnel.tsv"
+        f"{BENCHDIR}/plot_funnel/{{exp}}.tsv"
     software:
         QC_ENV
     shell:
@@ -138,5 +138,6 @@ rule plot_funnel:
 
         python workflow/scripts/plot_funnel.py \
             --input {input:q} \
+            --experiment {wildcards.exp:q} \
             --output {output.svg:q}
         """

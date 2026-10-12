@@ -26,7 +26,6 @@ rule all:
             for kind in ("conservative.narrowPeak.gz", "optimal.narrowPeak.gz")
         ],
         [f"{OUTDIR}/{e}/idr/{e}.{p}.idr.{x}" for e in CHIPS for p in idr_pairs(e) for x in ("txt.gz", "svg")],
-        f"{OUTDIR}/qc_funnel.svg",
         [f"{OUTDIR}/{e}/{e}.{plot}.svg" for e in CHIPS for plot in ("fingerprint", "footprint")],
-        [f"{OUTDIR}/{e}/{e}.duplicates.svg" for e in EXPERIMENTS],
+        [f"{OUTDIR}/{e}/{e}.{plot}.svg" for e in EXPERIMENTS for plot in ("duplicates", "funnel")],
         [f"{OUTDIR}/{e}/{e}.insert_size.svg" for e in EXPERIMENTS if pe_reps(e)],

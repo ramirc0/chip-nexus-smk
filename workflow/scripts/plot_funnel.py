@@ -1,4 +1,4 @@
-"""Plot where each library's reads go, one stacked bar per library.
+"""Plot where an experiment's reads go, one stacked bar per replicate.
 
 Each bar splits the raw reads (pairs for paired-end) by the step that removed
 them, ending with the distinct reads. For a library without a barcode, the
@@ -32,6 +32,7 @@ def build_parser():
     """
     p = argparse.ArgumentParser(description="Plot the read funnel.")
     p.add_argument("-i", "--input", required=True, help="Run QC TSV.")
+    p.add_argument("-e", "--experiment", required=True, help="Experiment to plot.")
     p.add_argument(
         "-o", "--output", required=True, help="SVG to write (PNG beside it)."
     )
@@ -39,7 +40,7 @@ def build_parser():
 
 
 def main(argv=None):
-    """Draw one stacked bar per library.
+    """Draw one stacked bar per replicate of the experiment.
 
     Parameters
     ----------
@@ -49,11 +50,14 @@ def main(argv=None):
     args = build_parser().parse_args(argv)
     counts = (
         pl.read_csv(args.input, separator="\t", infer_schema_length=0)
-        .filter(pl.col("metric").is_in([s[1] for s in STEPS]))
+        .filter(
+            pl.col("experiment") == args.experiment,
+            pl.col("metric").is_in([s[1] for s in STEPS]),
+        )
         .with_columns(pl.col("value").cast(pl.Float64))
         .pivot("metric", index=["experiment", "replicate"], values="value")
     )
-    names = (counts["experiment"] + "." + counts["replicate"]).to_list()
+    names = counts["replicate"].to_list()
 
     pk.use("plain")
     fig, ax = plt.subplots(figsize=(6, 1.5 + 0.3 * len(names)))
