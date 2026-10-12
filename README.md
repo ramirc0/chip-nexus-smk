@@ -60,6 +60,11 @@ dm6, sacCer3, and ASM294v2). Each needs:
 
 `smooth_window` (150) sets the MACS3 window centered on each 5' end.
 
+`run_id` names the output directory, `results/<run_id>/`. Production runs use
+`<YYYY-MM-DD>-<slug>`, the start date plus a short name, such as
+`2026-10-11-sra-chip`. Rerun under the same `run_id` when the sample sheet
+grows. Snakemake then skips the finished libraries.
+
 ## Outputs
 
 Under `results/<run_id>/<experiment>/`:
