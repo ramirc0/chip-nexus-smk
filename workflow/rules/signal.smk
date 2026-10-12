@@ -1,8 +1,9 @@
 # Raw 5' count tracks per strand, both positive.
 
 
-# bam2bw counts every mapped read: no duplicate, MAPQ, or mate filter. The BAMs
-# are already filtered and hold R1 only. It drops chromosomes absent from -s.
+# figwig bam2bw counts every mapped read: no duplicate, MAPQ, or mate filter.
+# The BAMs are already filtered and hold R1 only. It drops chromosomes absent
+# from -s.
 rule tracks:
     input:
         bams=lambda w: [f"{lib_prefix(w.exp, r)}.bam" for r in reps_of(w.exp, w.sample)],
@@ -22,7 +23,7 @@ rule tracks:
         r"""
         exec &> >(tee {log:q})
 
-        bam2bw \
+        figwig bam2bw \
             -s {input.sizes:q} \
             -n {params.name:q} \
             -p {threads} \

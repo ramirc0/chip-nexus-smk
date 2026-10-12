@@ -19,7 +19,7 @@ ENCODE pipeline.
    be proper, and orphaned mates are dropped.
 4. **Dedup** with `samtools markdup`, keyed on the read ID UMI. The BAM keeps
    R1 only.
-5. **Tracks** with bam2bw: raw 5' end counts, one bigWig per strand.
+5. **Tracks** with `figwig bam2bw`: raw 5' end counts, one bigWig per strand.
 6. **Peaks** with MACS3 on each replicate, the pool, and their pseudoreplicates.
 7. **IDR** on true replicate pairs, self-pseudoreplicates, and pooled
    pseudoreplicates. Then pick the ENCODE conservative and optimal sets.
@@ -171,7 +171,7 @@ The launcher env (`pixi.toml` at the root) has Snakemake, the pixi
 software-deployment plugin, and the SLURM executor plugins. The rule envs are
 a second pixi workspace, `workflow/envs/`, with two environments:
 
-- `default`: cutadapt, bowtie2, samtools, bedtools, MACS3, bam2bw, gawk, and
+- `default`: cutadapt, bowtie2, samtools, bedtools, MACS3, figwig, gawk, and
   polars.
 - `idr`: IDR 2.0.4.2, which needs python 3.9 and numpy < 1.20.
 - `qc`: matplotlib and poikilos, for the figures.
@@ -197,6 +197,6 @@ Mölder, Felix, Kim Philipp Jablonski, Brice Letcher, et al. 2021. “Sustainabl
 
 Quinlan, Aaron R., and Ira M. Hall. 2010. “BEDTools: A Flexible Suite of Utilities for Comparing Genomic Features.” Bioinformatics 26 (6): 841–42. https://doi.org/10.1093/bioinformatics/btq033.
 
-Schreiber, Jacob. n.d. Bam2bw. Github. Accessed October 11, 2026. https://github.com/jmschrei/bam2bw.
+Schreiber, Jacob. n.d. Figwig. Github. Accessed October 12, 2026. https://github.com/jmschrei/figwig.
 
 Zhang, Yong, Tao Liu, Clifford A. Meyer, et al. 2008. “Model-Based Analysis of ChIP-Seq (MACS).” Genome Biology 9 (9): R137. https://doi.org/10.1186/gb-2008-9-9-r137.
