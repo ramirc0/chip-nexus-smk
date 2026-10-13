@@ -114,11 +114,12 @@ raises. Levels rise from `OK` to `WARNING`, `NOT_COMPLIANT`, and `ERROR`.
 | `nrf` | Every library | < 0.5 NOT_COMPLIANT, < 0.8 WARNING |
 | `pbc1` | Every library | < 0.5 NOT_COMPLIANT, < 0.9 WARNING |
 | `pbc2` | Every library | < 1 NOT_COMPLIANT, < 10 WARNING. An empty PBC2 with M1 > 0 counts as infinite. |
+| `nrf_10m`, `pbc1_10m`, `pbc2_10m` | Every library | The tiers above, at 10M reads |
 | `replicates` | ChIP experiments | One replicate is NOT_COMPLIANT. |
 | `control` | ChIP experiments | No control is ERROR. |
 | `control_reads_distinct` | ChIP experiments with a control, on GRCh38, hg19, mm10, mm9 | The control's summed `reads_distinct`, on the `reads_distinct` tiers |
 | `reproducibility` | ChIP experiments with two or more replicates | `borderline` is WARNING. `fail` is NOT_COMPLIANT. |
-| `status` | Every experiment | The worst level of the experiment and its libraries, `replicates` and `control` left out |
+| `status` | Every experiment | The worst level of the experiment and its libraries, without `replicates`, `control`, and the `_10m` rows |
 
 The first tier whose bound exceeds the value applies.
 
@@ -132,8 +133,9 @@ The first tier whose bound exceeds the value applies.
 - Every target gets the TF tiers. Histone mark classes, NSC, RSC, FRiP,
   antibodies, and metadata go ungraded. ENCODE4 sets no FRiP threshold.
 - The sheet has no control type, so any control counts as an input.
-- `status` leaves out `replicates` and `control`. A run without controls
-  still shows which data pass.
+- `status` leaves out `replicates` and `control`, so a run without controls
+  still shows which data pass. It leaves out the `_10m` rows to stay the
+  portal's grade.
 
 [encoded]: https://github.com/ENCODE-DCC/encoded/tree/9bd8ff18bc5053421d1105a729af4bdb68dab181/src/encoded/audit
 

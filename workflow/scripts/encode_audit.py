@@ -7,8 +7,12 @@ of the audit it raises. Counts depend on genome size, so they are graded only
 on the assemblies the portal grades. Ratios and the design are graded on every
 genome.
 
+The `_10m` complexity metrics get the same tiers at the depth Landt et al.
+2012 quote. The portal grades full depth.
+
 An experiment's `status` row holds the worst level of its rows and its
-libraries' rows, except the design rows `replicates` and `control`.
+libraries' rows. It leaves out the design rows `replicates` and `control`, and
+the `_10m` rows, so it stays the portal's grade.
 """
 
 import argparse
@@ -19,7 +23,6 @@ import polars as pl
 LEVELS = ["OK", "WARNING", "NOT_COMPLIANT", "ERROR"]
 ENCODE_ASSEMBLIES = {"GRCh38", "hg19", "mm10", "mm9"}
 MODERN_ASSEMBLIES = {"ce10", "ce11", "dm3", "dm6"}
-DESIGN = {"replicates", "control"}
 
 # (bound, level, audit) in ascending order. The first with value < bound applies.
 DEPTH = [
@@ -48,6 +51,8 @@ COMPLEXITY = {
         (10, "WARNING", "mild to moderate bottlenecking"),
     ],
 }
+COMPLEXITY_10M = {f"{m}_10m": tiers for m, tiers in COMPLEXITY.items()}
+OUTSIDE_STATUS = {"replicates", "control", *COMPLEXITY_10M}
 REPLICATES = [(2, "NOT_COMPLIANT", "unreplicated experiment")]
 # peak_sets.py labels the IDR ratios with the portal's `> 2` rule.
 REPRODUCIBILITY = {
@@ -114,7 +119,11 @@ def main(argv=None):
         if exp not in controls.values():
             graded += _experiment_rows(qc, exp, genome, controls.get(exp, ""), reps)
         status = max(
-            (level for _, _, metric, _, level, _ in graded if metric not in DESIGN),
+            (
+                level
+                for _, _, metric, _, level, _ in graded
+                if metric not in OUTSIDE_STATUS
+            ),
             key=LEVELS.index,
             default="OK",
         )
@@ -149,7 +158,7 @@ def _library_tiers(genome):
         counts = {"reads_distinct": MODERN_DEPTH}
     else:
         counts = {}
-    return counts | COMPLEXITY
+    return counts | COMPLEXITY | COMPLEXITY_10M
 
 
 def _library_rows(qc, exp, rep, tiers):
@@ -175,8 +184,9 @@ def _library_rows(qc, exp, rep, tiers):
     numbers = {m: None if v is None else float(v) for m, v in values.items()}
     # qc_table.py writes no PBC2 when M2 = 0. With M1 > 0 it is the portal's
     # 'Infinity'.
-    if numbers["pbc2"] is None and (numbers["pbc1"] or 0) > 0:
-        numbers["pbc2"] = math.inf
+    for suffix in ("", "_10m"):
+        if numbers[f"pbc2{suffix}"] is None and (numbers[f"pbc1{suffix}"] or 0) > 0:
+            numbers[f"pbc2{suffix}"] = math.inf
     return [
         (exp, rep, m, values[m], *_grade(n, tiers[m]))
         for m, n in numbers.items()

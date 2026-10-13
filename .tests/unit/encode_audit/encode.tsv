@@ -4,31 +4,49 @@ hs	rep1	read_length_mean	25.9	ERROR	extremely low read length
 hs	rep1	nrf	0.4999	NOT_COMPLIANT	poor library complexity
 hs	rep1	pbc1	0.4999	NOT_COMPLIANT	severe bottlenecking
 hs	rep1	pbc2	0.9999	NOT_COMPLIANT	severe bottlenecking
+hs	rep1	nrf_10m	0.4999	NOT_COMPLIANT	poor library complexity
+hs	rep1	pbc1_10m	0.4999	NOT_COMPLIANT	severe bottlenecking
+hs	rep1	pbc2_10m	0.9999	NOT_COMPLIANT	severe bottlenecking
 hs	rep2	reads_distinct	5000000	NOT_COMPLIANT	insufficient read depth
 hs	rep2	read_length_mean	26	NOT_COMPLIANT	insufficient read length
 hs	rep2	nrf	0.5	WARNING	moderate library complexity
 hs	rep2	pbc1	0.5	WARNING	mild to moderate bottlenecking
 hs	rep2	pbc2	1	WARNING	mild to moderate bottlenecking
+hs	rep2	nrf_10m	0.5	WARNING	moderate library complexity
+hs	rep2	pbc1_10m	0.5	WARNING	mild to moderate bottlenecking
+hs	rep2	pbc2_10m	1	WARNING	mild to moderate bottlenecking
 hs	rep3	reads_distinct	9999999	NOT_COMPLIANT	insufficient read depth
 hs	rep3	read_length_mean	35.9	NOT_COMPLIANT	insufficient read length
 hs	rep3	nrf	0.7999	WARNING	moderate library complexity
 hs	rep3	pbc1	0.8999	WARNING	mild to moderate bottlenecking
 hs	rep3	pbc2	9.9999	WARNING	mild to moderate bottlenecking
+hs	rep3	nrf_10m	0.7999	WARNING	moderate library complexity
+hs	rep3	pbc1_10m	0.8999	WARNING	mild to moderate bottlenecking
+hs	rep3	pbc2_10m	9.9999	WARNING	mild to moderate bottlenecking
 hs	rep4	reads_distinct	10000000	WARNING	low read depth
 hs	rep4	read_length_mean	36	WARNING	low read length
 hs	rep4	nrf	0.8	OK	
 hs	rep4	pbc1	0.9	OK	
 hs	rep4	pbc2	10	OK	
+hs	rep4	nrf_10m	0.8	OK	
+hs	rep4	pbc1_10m	0.9	OK	
+hs	rep4	pbc2_10m	10	OK	
 hs	rep5	reads_distinct	19999999	WARNING	low read depth
 hs	rep5	read_length_mean	49.9	WARNING	low read length
 hs	rep5	nrf	1	OK	
 hs	rep5	pbc1	1	OK	
 hs	rep5	pbc2		OK	
+hs	rep5	nrf_10m	1	OK	
+hs	rep5	pbc1_10m	1	OK	
+hs	rep5	pbc2_10m		OK	
 hs	rep6	reads_distinct	20000000	OK	
 hs	rep6	read_length_mean	50	OK	
 hs	rep6	nrf	0.95	OK	
 hs	rep6	pbc1	0.95	OK	
 hs	rep6	pbc2	12.5	OK	
+hs	rep6	nrf_10m	0.95	OK	
+hs	rep6	pbc1_10m	0.95	OK	
+hs	rep6	pbc2_10m	12.5	OK	
 hs	""	replicates	6	OK	
 hs	""	control	hs_input	OK	
 hs	""	control_reads_distinct	19999999	WARNING	control low read depth
@@ -39,19 +57,30 @@ hs_input	rep1	read_length_mean	50	OK
 hs_input	rep1	nrf	0.9	OK	
 hs_input	rep1	pbc1	0.95	OK	
 hs_input	rep1	pbc2	20	OK	
+hs_input	rep1	nrf_10m	0.9	OK	
+hs_input	rep1	pbc1_10m	0.95	OK	
+hs_input	rep1	pbc2_10m	20	OK	
 hs_input	rep2	reads_distinct	9999999	NOT_COMPLIANT	insufficient read depth
 hs_input	rep2	read_length_mean	50	OK	
 hs_input	rep2	nrf	0.9	OK	
 hs_input	rep2	pbc1	0.95	OK	
 hs_input	rep2	pbc2	20	OK	
+hs_input	rep2	nrf_10m	0.9	OK	
+hs_input	rep2	pbc1_10m	0.95	OK	
+hs_input	rep2	pbc2_10m	20	OK	
 hs_input	""	status		NOT_COMPLIANT	
 dm	rep1	reads_distinct	2999999	NOT_COMPLIANT	insufficient read depth
 dm	rep1	nrf	0.9	OK	
 dm	rep1	pbc1	0.95	OK	
 dm	rep1	pbc2	20	OK	
+dm	rep1	nrf_10m	0.9	OK	
+dm	rep1	pbc1_10m	0.95	OK	
+dm	rep1	pbc2_10m	20	OK	
 dm	rep2	reads_distinct	3000000	OK	
 dm	rep2	nrf	0.9	OK	
 dm	rep2	pbc1	0	NOT_COMPLIANT	severe bottlenecking
+dm	rep2	nrf_10m	0.9	OK	
+dm	rep2	pbc1_10m	0	NOT_COMPLIANT	severe bottlenecking
 dm	""	replicates	2	OK	
 dm	""	control		ERROR	missing possible_controls
 dm	""	reproducibility	fail	NOT_COMPLIANT	insufficient replicate concordance
@@ -61,11 +90,17 @@ mm	rep1	read_length_mean	100	OK
 mm	rep1	nrf	0.9	OK	
 mm	rep1	pbc1	0.95	OK	
 mm	rep1	pbc2	20	OK	
+mm	rep1	nrf_10m	0.9	OK	
+mm	rep1	pbc1_10m	0.95	OK	
+mm	rep1	pbc2_10m	20	OK	
 mm	rep2	reads_distinct	25000000	OK	
 mm	rep2	read_length_mean	100	OK	
 mm	rep2	nrf	0.9	OK	
 mm	rep2	pbc1	0.95	OK	
 mm	rep2	pbc2	20	OK	
+mm	rep2	nrf_10m	0.9	OK	
+mm	rep2	pbc1_10m	0.95	OK	
+mm	rep2	pbc2_10m	20	OK	
 mm	""	replicates	2	OK	
 mm	""	control		ERROR	missing possible_controls
 mm	""	reproducibility	pass	OK	
@@ -73,6 +108,9 @@ mm	""	status		OK
 sc	rep1	nrf	0.9	OK	
 sc	rep1	pbc1	0.95	OK	
 sc	rep1	pbc2		OK	
+sc	rep1	nrf_10m	0.4	NOT_COMPLIANT	poor library complexity
+sc	rep1	pbc1_10m	0.95	OK	
+sc	rep1	pbc2_10m		OK	
 sc	""	replicates	1	NOT_COMPLIANT	unreplicated experiment
 sc	""	control		ERROR	missing possible_controls
 sc	""	status		OK	
