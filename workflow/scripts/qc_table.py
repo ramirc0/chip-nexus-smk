@@ -14,6 +14,9 @@ from pathlib import Path
 import polars as pl
 from zlib_ng import gzip_ng
 
+# Landt et al. 2012 quote the NRF target at 10M reads, because NRF falls with depth.
+SUBSAMPLE = 10_000_000
+
 
 def build_parser():
     """Build the qc_table.py command-line parser.
@@ -203,7 +206,9 @@ def _dedup(path):
     -------
     dict
         Total and distinct reads, NRF, PBC1, PBC2, and the duplicate
-        fraction. A ratio with a zero denominator is None.
+        fraction. Then NRF, PBC1, and PBC2 expected in a random subsample of
+        `SUBSAMPLE` reads, or of every read in a smaller library. A ratio with
+        a zero denominator is None.
     """
     hist = pl.read_csv(
         path,
@@ -221,6 +226,42 @@ def _dedup(path):
         "pbc1": m1 / distinct if distinct else None,
         "pbc2": m1 / m2 if m2 else None,
         "duplicate_fraction": 1 - distinct / total if total else None,
+        **_subsampled(hist, total),
+    }
+
+
+def _subsampled(hist, total):
+    """Compute NRF, PBC1, and PBC2 expected in a subsample of `SUBSAMPLE` reads.
+
+    Each read is kept with probability `SUBSAMPLE / total`, so a group of `k`
+    reads keeps `j` of them with binomial probability.
+
+    Parameters
+    ----------
+    hist : polars.DataFrame
+        Dedup histogram with `group_size` and `n_groups`.
+    total : int
+        Reads in the histogram.
+
+    Returns
+    -------
+    dict
+        `nrf_10m`, `pbc1_10m`, and `pbc2_10m`. A ratio with a zero denominator
+        is None.
+    """
+    keep = min(1.0, SUBSAMPLE / total) if total else 1.0
+    drop = 1 - keep
+    k, n = pl.col("group_size"), pl.col("n_groups")
+    e = hist.select(
+        distinct=(n * (1 - drop**k)).sum(),
+        m1=(n * k * keep * drop ** (k - 1)).sum(),
+        m2=(n * k * (k - 1) / 2 * keep**2 * drop ** (k - 2)).filter(k >= 2).sum(),
+    ).row(0, named=True)
+    reads = keep * total
+    return {
+        "nrf_10m": e["distinct"] / reads if reads else None,
+        "pbc1_10m": e["m1"] / e["distinct"] if e["distinct"] else None,
+        "pbc2_10m": e["m1"] / e["m2"] if e["m2"] else None,
     }
 
 

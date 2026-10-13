@@ -24,8 +24,9 @@ ENCODE pipeline.
 7. **IDR** on true replicate pairs, self-pseudoreplicates, and pooled
    pseudoreplicates. Then pick the ENCODE conservative and optimal sets.
 8. **QC**: per-step read counts, read length, NRF, PBC1, PBC2, FRiP,
-   reproducibility, and the strand footprint at summits. Plus the figures
-   listed under Outputs.
+   reproducibility, and the strand footprint at summits. NRF, PBC1, and PBC2
+   also as expected in a 10M-read subsample, the depth Landt et al. 2012
+   quote. Plus the figures listed under Outputs.
 9. **ENCODE audits**: grade each library and experiment against the ENCODE TF
    ChIP-seq audits.
 
