@@ -24,6 +24,11 @@ SOFTWARE_ENV = pixi(workspace="../envs", env=config["pixi_env"], locked=True)
 IDR_ENV = pixi(workspace="../envs", env="idr", locked=True)
 QC_ENV = pixi(workspace="../envs", env="qc", locked=True)
 
+# The pixi plugin installs the envs inside each job. Parallel SLURM jobs then race
+# on a fresh or relocked env, so install them once before any job starts.
+onstart:
+    shell("pixi install --manifest-path {workflow.basedir:q}/envs/pixi.toml --all --locked")
+
 # Dots separate name parts in file names, so names never contain one.
 NAME = r"[A-Za-z0-9][A-Za-z0-9_-]*"
 # Path components and IDR labels that a replicate name would collide with.

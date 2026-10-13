@@ -176,8 +176,10 @@ a second pixi workspace, `workflow/envs/`, with two environments:
 - `idr`: IDR 2.0.4.2, which needs python 3.9 and numpy < 1.20.
 - `qc`: matplotlib and poikilos, for the figures.
 
-Jobs install the envs on first use. After a manifest edit, run `pixi lock` in
-`workflow/envs/`. Any change to a manifest or lock reruns every rule.
+pixi must be on `PATH`. An `onstart` hook installs the envs before the first
+job. Parallel SLURM jobs would otherwise race to install them. After a
+manifest edit, run `pixi lock` in `workflow/envs/`. Any change to a manifest
+or lock reruns every rule.
 
 ## References
 
