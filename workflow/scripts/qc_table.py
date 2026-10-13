@@ -105,17 +105,22 @@ def _barcode(path):
     Returns
     -------
     dict
-        Input reads, reads with a barcode, and reads whose fixed barcode had
-        one substitution. A library without a barcode passes every read.
+        Input reads, their mean read 1 length, reads with a barcode, and
+        reads whose fixed barcode had one substitution. A library without a
+        barcode passes every read. The length is None without reads.
     """
     report = json.loads(Path(path).read_text())
+    reads = report["read_counts"]["input"]
     rescued = sum(
         sum(t["counts"][1:])
         for a in report["adapters_read1"] or []
         for t in a["five_prime_end"]["trimmed_lengths"]
     )
     return {
-        "reads_raw": report["read_counts"]["input"],
+        "reads_raw": reads,
+        "read_length_mean": report["basepair_counts"]["input_read1"] / reads
+        if reads
+        else None,
         "reads_barcode": report["read_counts"]["output"],
         "reads_barcode_rescued": rescued,
     }

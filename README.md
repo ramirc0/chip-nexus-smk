@@ -23,8 +23,9 @@ ENCODE pipeline.
 6. **Peaks** with MACS3 on each replicate, the pool, and their pseudoreplicates.
 7. **IDR** on true replicate pairs, self-pseudoreplicates, and pooled
    pseudoreplicates. Then pick the ENCODE conservative and optimal sets.
-8. **QC**: per-step read counts, NRF, PBC1, PBC2, FRiP, reproducibility, and
-   the strand footprint at summits. Plus the figures listed under Outputs.
+8. **QC**: per-step read counts, read length, NRF, PBC1, PBC2, FRiP,
+   reproducibility, and the strand footprint at summits. Plus the figures
+   listed under Outputs.
 
 ## Sample sheet
 
