@@ -13,6 +13,7 @@ include: "rules/plots.smk"
 rule all:
     input:
         f"{OUTDIR}/qc.tsv",
+        f"{OUTDIR}/encode.tsv",
         [f"{lib_prefix(e, r)}.bam" for e, r in LIBRARIES],
         [
             f"{lib_prefix(e, s)}.{strand}.bw"

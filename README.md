@@ -26,6 +26,8 @@ ENCODE pipeline.
 8. **QC**: per-step read counts, read length, NRF, PBC1, PBC2, FRiP,
    reproducibility, and the strand footprint at summits. Plus the figures
    listed under Outputs.
+9. **ENCODE audits**: grade each library and experiment against the ENCODE TF
+   ChIP-seq audits.
 
 ## Sample sheet
 
@@ -90,9 +92,49 @@ Under `results/<run_id>/<experiment>/`:
 | `idr/<exp>.<pair>.idr.svg` | The four `idr --plot` panels, redrawn from the IDR output. |
 
 `results/<run_id>/qc.tsv` holds every metric in long form: `experiment`,
-`replicate`, `metric`, `value`.
+`replicate`, `metric`, `value`. `results/<run_id>/encode.tsv` grades those
+metrics, as described under ENCODE audits.
 
 Every figure is an SVG with a PNG beside it.
+
+## ENCODE audits
+
+`encode.tsv` grades each library and ChIP experiment against the ENCODE TF
+ChIP-seq audits. The cutoffs, operators, levels, and audit names copy the
+portal audit code in [ENCODE-DCC/encoded][encoded] at `9bd8ff1`. Each row
+takes a qc.tsv `metric` and `value` and adds a `level` and the `audit` it
+raises. Levels rise from `OK` to `WARNING`, `NOT_COMPLIANT`, and `ERROR`.
+
+| Metric | Graded on | Tiers |
+|---|---|---|
+| `reads_distinct` | GRCh38, hg19, mm10, mm9 | < 5M ERROR, < 10M NOT_COMPLIANT, < 20M WARNING |
+| `reads_distinct` | ce10, ce11, dm3, dm6 | < 3M NOT_COMPLIANT, the modERN rule |
+| `read_length_mean` | GRCh38, hg19, mm10, mm9 | < 26 ERROR, < 36 NOT_COMPLIANT, < 50 WARNING |
+| `nrf` | Every library | < 0.5 NOT_COMPLIANT, < 0.8 WARNING |
+| `pbc1` | Every library | < 0.5 NOT_COMPLIANT, < 0.9 WARNING |
+| `pbc2` | Every library | < 1 NOT_COMPLIANT, < 10 WARNING. An empty PBC2 with M1 > 0 counts as infinite. |
+| `replicates` | ChIP experiments | One replicate is NOT_COMPLIANT. |
+| `control` | ChIP experiments | No control is ERROR. |
+| `control_reads_distinct` | ChIP experiments with a control, on GRCh38, hg19, mm10, mm9 | The control's summed `reads_distinct`, on the `reads_distinct` tiers |
+| `reproducibility` | ChIP experiments with two or more replicates | `borderline` is WARNING. `fail` is NOT_COMPLIANT. |
+| `status` | Every experiment | The worst level of the experiment and its libraries, `replicates` and `control` left out |
+
+The first tier whose bound exceeds the value applies.
+
+- Genome keys MUST name their assembly for the count tiers to apply. The
+  portal grades counts on no other assembly, so the yeasts get none.
+- Usable fragments are `reads_distinct`, the distinct R1 reads on allow-list
+  chromosomes. A library without a barcode counts reads as distinct by
+  position, as ENCODE does.
+- `read_length_mean` is the mean raw read 1 length. The portal grades each
+  FASTQ's declared length instead.
+- Every target gets the TF tiers. Histone mark classes, NSC, RSC, FRiP,
+  antibodies, and metadata go ungraded. ENCODE4 sets no FRiP threshold.
+- The sheet has no control type, so any control counts as an input.
+- `status` leaves out `replicates` and `control`. A run without controls
+  still shows which data pass.
+
+[encoded]: https://github.com/ENCODE-DCC/encoded/tree/9bd8ff18bc5053421d1105a729af4bdb68dab181/src/encoded/audit
 
 ## Running
 
@@ -144,6 +186,19 @@ pixi run --manifest-path workflow/envs/pixi.toml python .tests/integration/sra/s
 snakemake --profile profiles/slurm \
     --configfile config/config.yaml.template .tests/integration/sra/config.yaml
 pixi run --manifest-path workflow/envs/pixi.toml python .tests/integration/check_run.py results/sra
+```
+
+`.tests/unit/encode_audit/` holds a QC table with a value on each side of
+every audit tier bound, and the audit table it MUST produce.
+
+```bash
+pixi run --manifest-path workflow/envs/pixi.toml python workflow/scripts/encode_audit.py \
+    --qc .tests/unit/encode_audit/qc.tsv \
+    --experiments hs hs_input dm mm sc \
+    --genomes GRCh38 GRCh38 dm6 mm10 sacCer3 \
+    --controls hs hs_input \
+    --output /dev/stdout \
+| diff - .tests/unit/encode_audit/encode.tsv
 ```
 
 ## Conventions

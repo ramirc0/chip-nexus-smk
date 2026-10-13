@@ -1,4 +1,4 @@
-# FRiP and the run-level QC table.
+# FRiP, the run-level QC table, and its ENCODE audits.
 
 
 # Reads are their 5' ends, the λ-exonuclease stop.
@@ -148,5 +148,33 @@ rule qc_table:
             --idr-peaks {input.idr_peaks:q} \
             --reproducibility {input.reproducibility:q} \
             --footprint {input.footprint:q} \
+            --output {output:q}
+        """
+
+
+rule encode_audit:
+    input:
+        f"{OUTDIR}/qc.tsv",
+    output:
+        f"{OUTDIR}/encode.tsv",
+    params:
+        experiments=list(EXPERIMENTS),
+        genomes=[e["genome"] for e in EXPERIMENTS.values()],
+        controls=[x for exp, e in EXPERIMENTS.items() if e["control"] for x in (exp, e["control"])],
+    log:
+        f"{LOGDIR}/encode_audit.txt",
+    benchmark:
+        f"{BENCHDIR}/encode_audit.tsv"
+    software:
+        SOFTWARE_ENV
+    shell:
+        r"""
+        exec &> >(tee {log:q})
+
+        python workflow/scripts/encode_audit.py \
+            --qc {input:q} \
+            --experiments {params.experiments:q} \
+            --genomes {params.genomes:q} \
+            --controls {params.controls:q} \
             --output {output:q}
         """
