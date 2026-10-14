@@ -34,6 +34,8 @@ rule pseudoreps:
         touch "$workdir/pr1" "$workdir/pr2"
         python -m zlib_ng.gzip_ng -cn "$workdir/pr1" > {output.pr1:q}
         python -m zlib_ng.gzip_ng -cn "$workdir/pr2" > {output.pr2:q}
+
+        sync {output:q}
         """
 
 
@@ -56,6 +58,8 @@ rule pooled_pseudoreps:
 
         cat {input.pr1:q} > {output.pr1:q}
         cat {input.pr2:q} > {output.pr2:q}
+
+        sync {output:q}
         """
 
 
@@ -113,6 +117,8 @@ rule macs3:
         bedtools intersect -v -a {output.peaks:q} -b {input.blacklist:q} \
         | python -m zlib_ng.gzip_ng -cn \
         > {output.bfilt:q}
+
+        sync {output:q}
         """
 
 
@@ -177,6 +183,8 @@ rule idr:
         | bedtools intersect -v -a stdin -b {input.blacklist:q} \
         | python -m zlib_ng.gzip_ng -cn \
         > {output.peaks:q}
+
+        sync {output:q}
         """
 
 
@@ -208,4 +216,6 @@ rule peak_sets:
             --conservative {output.conservative:q} \
             --optimal {output.optimal:q} \
             --table {output.table:q}
+
+        sync {output:q}
         """

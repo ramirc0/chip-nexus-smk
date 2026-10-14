@@ -26,4 +26,6 @@ rule bowtie2_index:
             --threads {threads} \
             {input:q} \
             {params.prefix:q}
+
+        sync {output:q}
         """

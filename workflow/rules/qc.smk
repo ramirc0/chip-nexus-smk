@@ -35,6 +35,8 @@ rule frip:
             printf 'replicate\t%s\t%s\n' "$total" "$(in_peaks {input.peaks:q})"
             printf 'optimal\t%s\t%s\n' "$total" "$(in_peaks {input.optimal:q})"
         }} > {output:q}
+
+        sync {output:q}
         """
 
 
@@ -64,6 +66,8 @@ rule fingerprint:
             --minus {input.minus:q} \
             --bin-size 500 \
             --output {output:q}
+
+        sync {output:q}
         """
 
 
@@ -98,6 +102,8 @@ rule footprint:
             --width 100 \
             --top 1000 \
             --output {output:q}
+
+        sync {output:q}
         """
 
 
@@ -149,6 +155,8 @@ rule qc_table:
             --reproducibility {input.reproducibility:q} \
             --footprint {input.footprint:q} \
             --output {output:q}
+
+        sync {output:q}
         """
 
 
@@ -177,4 +185,6 @@ rule encode_audit:
             --genomes {params.genomes:q} \
             --controls {params.controls:q} \
             --output {output:q}
+
+        sync {output:q}
         """

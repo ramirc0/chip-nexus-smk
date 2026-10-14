@@ -23,6 +23,8 @@ rule plot_fingerprint:
             --chip {input.chip:q} \
             --control {input.control:q} \
             --output {output.svg:q}
+
+        sync {output:q}
         """
 
 
@@ -45,6 +47,8 @@ rule plot_footprint:
         python workflow/scripts/plot_footprint.py \
             --input {input:q} \
             --output {output.svg:q}
+
+        sync {output:q}
         """
 
 
@@ -67,6 +71,8 @@ rule plot_duplicates:
         python workflow/scripts/plot_duplicates.py \
             --input {input:q} \
             --output {output.svg:q}
+
+        sync {output:q}
         """
 
 
@@ -90,6 +96,8 @@ rule plot_insert_size:
         python workflow/scripts/plot_insert_size.py \
             --input {input:q} \
             --output {output.svg:q}
+
+        sync {output:q}
         """
 
 
@@ -117,6 +125,8 @@ rule plot_idr:
             --threshold {params.threshold:q} \
             --title {params.title:q} \
             --output {output.svg:q}
+
+        sync {output:q}
         """
 
 
@@ -140,4 +150,6 @@ rule plot_funnel:
             --input {input:q} \
             --experiment {wildcards.exp:q} \
             --output {output.svg:q}
+
+        sync {output:q}
         """

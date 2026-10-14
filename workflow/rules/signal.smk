@@ -28,4 +28,6 @@ rule tracks:
             -n {params.name:q} \
             -p {threads} \
             {input.bams:q}
+
+        sync {output:q}
         """

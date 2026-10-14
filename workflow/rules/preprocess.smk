@@ -76,4 +76,6 @@ rule trim:
             - \
         | python -m zlib_ng.gzip_ng -1 -cn \
         > {output.fastq:q}
+
+        sync {output:q}
         """

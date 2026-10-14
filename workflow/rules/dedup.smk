@@ -60,4 +60,6 @@ rule dedup:
                 {input.sizes:q} - \
             | sort -k1,1n
         }} > {output.hist:q}
+
+        sync {output:q}
         """

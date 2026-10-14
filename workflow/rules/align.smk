@@ -69,6 +69,8 @@ rule align:
         samtools view -u -F 128 {output.bam:q} \
         | samtools idxstats - \
         > {output.idxstats:q}
+
+        sync {output:q}
         """
 
 
@@ -89,6 +91,8 @@ rule insert_size:
         exec &> >(tee {log:q})
 
         samtools stats {input:q} > {output:q}
+
+        sync {output:q}
         """
 
 
@@ -119,4 +123,6 @@ rule tagalign:
             {input.sizes:q} - \
         | python -m zlib_ng.gzip_ng -cn \
         > {output:q}
+
+        sync {output:q}
         """
