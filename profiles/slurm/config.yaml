@@ -5,7 +5,7 @@ software-deployment-method:
 # One copy per user instead of one per workdir.
 software-deployment-cache-prefix: ~/.cache/snakemake/software
 
-jobs: 40
+jobs: unlimited
 max-jobs-per-timespan: 5/1s
 
 slurm-efficiency-report: true
