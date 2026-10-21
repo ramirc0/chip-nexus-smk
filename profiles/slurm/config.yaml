@@ -20,8 +20,8 @@ default-resources:
   slurm_partition: 12hours
   runtime: 60m
   mem_mb: 4000
-  # These nodes lack the /data mount that the sra-chip FASTQs live on.
-  slurm_extra: "--exclude=z1056,z1058,z1062,z1016"
+  # These nodes cannot read /data/zusers/ramirezc, where the references and sra-chip FASTQs live.
+  slurm_extra: "--exclude=z1056,z1058,z1062,z1016,z1076"
 
 set-threads:
   bowtie2_index: 16
