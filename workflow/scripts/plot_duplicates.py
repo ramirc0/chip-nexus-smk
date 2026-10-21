@@ -57,6 +57,7 @@ def main(argv=None):
         ylabel="Fraction of reads",
     )
     fig.legend(*ax.get_legend_handles_labels(), loc="outside right upper")
+    pk.fit_legend(fig)
     pk.despine(ax)
     pk.save_figure(fig, args.output)
     plt.close(fig)

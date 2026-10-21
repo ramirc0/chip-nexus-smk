@@ -53,6 +53,7 @@ def main(argv=None):
         )
     ax.set(xlabel="Insert size (bp)", ylabel="Fraction of pairs")
     fig.legend(*ax.get_legend_handles_labels(), loc="outside right upper")
+    pk.fit_legend(fig)
     pk.despine(ax)
     pk.save_figure(fig, args.output)
     plt.close(fig)

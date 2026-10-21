@@ -324,7 +324,7 @@ environments:
       - conda: https://conda.anaconda.org/conda-forge/noarch/python_abi-3.13-9_cp313.conda
       - conda: https://conda.anaconda.org/conda-forge/noarch/six-1.17.0-pyhe01879c_1.conda
       - conda: https://conda.anaconda.org/conda-forge/noarch/tzdata-2026c-h151e31d_0.conda
-      - pypi: git+https://github.com/ramirc0/poikilos#81cd1cb24b293722a9735377de00e9235f09270d
+      - pypi: git+https://github.com/ramirc0/poikilos#05b0fd449213346eaaa39aa9e56873ace657609e
 packages:
 - conda: https://conda.anaconda.org/bioconda/linux-64/bedtools-2.31.1-h13024bc_3.tar.bz2
   sha256: d8b7aef31be37da761a87e1263ea00d62b67134b546f018067786aa6d3dccfac
@@ -3435,9 +3435,9 @@ packages:
   run_exports: {}
   size: 556765
   timestamp: 1791523946731
-- pypi: git+https://github.com/ramirc0/poikilos#81cd1cb24b293722a9735377de00e9235f09270d
+- pypi: git+https://github.com/ramirc0/poikilos#05b0fd449213346eaaa39aa9e56873ace657609e
   name: poikilos
-  version: 0.1.0
+  version: 1.1.0
   requires_dist:
   - matplotlib>=3.11
   - adjusttext>=1.4.0 ; extra == 'labels'

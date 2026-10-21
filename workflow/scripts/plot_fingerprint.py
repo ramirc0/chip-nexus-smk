@@ -57,6 +57,7 @@ def main(argv=None):
         ax.plot(x, y, ls=style, label=prefix + Path(path).name.split(".")[1])
     ax.set(xlabel="Fraction of bins, by read count", ylabel="Fraction of reads")
     fig.legend(*ax.get_legend_handles_labels(), loc="outside right upper")
+    pk.fit_legend(fig)
     pk.despine(ax)
     pk.save_figure(fig, args.output)
     plt.close(fig)

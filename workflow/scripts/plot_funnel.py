@@ -70,6 +70,7 @@ def main(argv=None):
     ax.invert_yaxis()
     ax.set(xlabel="Fraction of raw reads")
     fig.legend(*ax.get_legend_handles_labels(), loc="outside right upper")
+    pk.fit_legend(fig)
     pk.despine(ax, categorical_y=True)
     pk.save_figure(fig, args.output)
     plt.close(fig)

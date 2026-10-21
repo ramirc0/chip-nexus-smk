@@ -55,8 +55,10 @@ def main(argv=None):
             xlabel="Distance from summit (bp)",
             ylabel="Mean 5' ends per summit",
         )
-        pk.despine(ax)
     fig.legend(*axes[0][0].get_legend_handles_labels(), loc="outside right upper")
+    pk.fit_legend(fig)
+    for ax in axes[0]:
+        pk.despine(ax)
     pk.save_figure(fig, args.output)
     plt.close(fig)
 
