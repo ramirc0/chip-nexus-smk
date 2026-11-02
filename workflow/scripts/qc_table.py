@@ -24,9 +24,12 @@ def build_parser():
     Returns
     -------
     argparse.ArgumentParser
-        Parser for the qc_table.py flags.
+        Parser for the qc_table.py flags. `@<file>` reads arguments from a
+        file, one per line.
     """
-    p = argparse.ArgumentParser(description="Gather QC files into one table.")
+    p = argparse.ArgumentParser(
+        description="Gather QC files into one table.", fromfile_prefix_chars="@"
+    )
     kinds = {
         "barcode": "cutadapt pass-1 (barcode) JSON reports.",
         "adapter": "cutadapt pass-2 (adapter) JSON reports.",

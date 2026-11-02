@@ -141,7 +141,10 @@ rule qc_table:
         r"""
         exec &> >(tee {log:q})
 
-        python workflow/scripts/qc_table.py \
+        # Thousands of paths overflow ARG_MAX. printf is a builtin, so it does not.
+        tmp=$(mktemp -d)
+        trap 'rm -rf "$tmp"' EXIT
+        printf '%s\n' \
             --barcode {input.barcode:q} \
             --adapter {input.adapter:q} \
             --bowtie2 {input.bowtie2:q} \
@@ -154,7 +157,9 @@ rule qc_table:
             --idr-peaks {input.idr_peaks:q} \
             --reproducibility {input.reproducibility:q} \
             --footprint {input.footprint:q} \
-            --output {output:q}
+            --output {output:q} \
+            > "$tmp/args.txt"
+        python workflow/scripts/qc_table.py @"$tmp/args.txt"
 
         sync {output:q}
         """

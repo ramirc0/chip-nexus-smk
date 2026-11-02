@@ -204,6 +204,13 @@ pixi run --manifest-path workflow/envs/pixi.toml python workflow/scripts/encode_
 | diff - .tests/unit/encode_audit/encode.tsv
 ```
 
+`.tests/unit/test_qc_table_args.py` checks that `qc_table.py` reads more input
+paths from an `@file` than one command line holds.
+
+```bash
+pixi run --manifest-path workflow/envs/pixi.toml python .tests/unit/test_qc_table_args.py
+```
+
 ## Conventions
 
 The layout and idioms come from `snakemake-template`. Follow the
